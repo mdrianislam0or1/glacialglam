@@ -1,3 +1,10 @@
-let money = 50;
-money = 29;
-money = 0;
+let good:number
+let club:string = 'real madrid';
+
+console.log(club)
+good = 44;
+let Famous:boolean = false;
+let famous:boolean;
+
+
+good =39;
