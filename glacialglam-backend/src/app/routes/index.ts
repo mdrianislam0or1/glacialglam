@@ -1,5 +1,5 @@
-import { UserRoutes } from './../modules/user/user.route';
 import { Router } from 'express';
+import { UserRoutes } from '../modules/user/user.route';
 
 const router = Router();
 
