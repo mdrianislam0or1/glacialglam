@@ -1,37 +1,11 @@
 import express from 'express';
 import { ProductControllers } from './product.controller';
-import { ProductValidation, ProductValidationType } from './product.validation';
-import { z } from 'zod';
+import { admin, protect } from '../../middlewares/authMiddleware';
 
 const router = express.Router();
 
-// Create a new product with validation middleware
-router.post('/create-product', async (req, res) => {
-  try {
-    const productData: ProductValidationType = ProductValidation.parse(
-      req.body,
-    );
-    // If validation passes, proceed to the controller
-    await ProductControllers.createProduct(req, res, productData);
-  } catch (error) {
-    // If validation fails, send a 400 Bad Request response with validation errors
-    if (error instanceof z.ZodError) {
-      res
-        .status(400)
-        .json({
-          success: false,
-          message: 'Invalid data provided',
-          errors: error.errors,
-        });
-    } else {
-      // Handle other types of errors here
-      res
-        .status(500)
-        .json({ success: false, message: 'Internal server error' });
-    }
-  }
-});
-
+// Use the product routes
+router.use('/create-product', ProductControllers.createProduct);
 // Get all products
 router.get('/', ProductControllers.getAllProducts);
 
