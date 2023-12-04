@@ -62,6 +62,75 @@ const calculateOrderTotal = async (
   }
 };
 
+// @desc    Get a single order by ID
+// @route   GET /api/orders/:orderId
+// @access  Private
+const getSingleOrder = async (
+  orderId: string,
+): Promise<OrderDocument | null> => {
+  try {
+    const order = await OrderModel.findById(orderId);
+
+    return order;
+  } catch (error) {
+    console.error('Error retrieving order:', error);
+    throw error;
+  }
+};
+
+// @desc    Get all orders
+// @route   GET /api/orders
+// @access  Private
+const getAllOrders = async (): Promise<OrderDocument[]> => {
+  try {
+    const orders = await OrderModel.find().sort({ createdAt: -1 }); // Sort by creation date in descending order
+
+    return orders;
+  } catch (error) {
+    console.error('Error retrieving orders:', error);
+    throw error;
+  }
+};
+
+// @desc    Update a single order by ID
+// @route   PUT /api/orders/:orderId
+// @access  Private
+const updateSingleOrder = async (
+  orderId: string,
+  updateData: Partial<OrderDocument>,
+): Promise<OrderDocument | null> => {
+  try {
+    const updatedOrder = await OrderModel.findByIdAndUpdate(
+      orderId,
+      updateData,
+      { new: true },
+    );
+
+    return updatedOrder;
+  } catch (error) {
+    console.error('Error updating order:', error);
+    throw error;
+  }
+};
+
+// @desc    Delete a single order by ID
+// @route   DELETE /api/orders/:orderId
+// @access  Private
+const deleteOrder = async (orderId: string): Promise<OrderDocument | null> => {
+  try {
+    const deletedOrder = await OrderModel.findByIdAndDelete(orderId);
+
+    return deletedOrder;
+  } catch (error) {
+    console.error('Error deleting order:', error);
+    throw error;
+  }
+};
+
 export const OrderServices = {
   createOrder,
+  getSingleOrder,
+  getAllOrders,
+  updateSingleOrder,
+  deleteOrder,
 };
