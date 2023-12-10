@@ -1,7 +1,9 @@
-import { Response } from 'express';
-import jwt from 'jsonwebtoken';
+// generateToken.ts
 
-const generateToken = (res: Response, userId: string) => {
+import jwt from 'jsonwebtoken';
+import { Response } from 'express';
+
+const generateToken = (res: Response, userId: string): string => {
   const token = jwt.sign({ userId }, process.env.JWT_SECRET as string, {
     expiresIn: '30d',
   });
@@ -13,6 +15,8 @@ const generateToken = (res: Response, userId: string) => {
     sameSite: 'strict', // Prevent CSRF attacks
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
   });
+
+  return token;
 };
 
 export default generateToken;
