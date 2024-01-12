@@ -3,7 +3,7 @@ import { IReview } from "./review.interface";
 
 const ReviewSchema = new Schema<IReview>(
   {
-    courseId: { type: Schema.Types.ObjectId, ref: "Course", required: true },
+    productId: { type: Schema.Types.ObjectId, ref: "Product", required: true },
     rating: { type: Number, required: true, min: 1, max: 5 },
     review: { type: String, required: true },
   },

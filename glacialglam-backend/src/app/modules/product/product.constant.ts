@@ -1,4 +1,4 @@
-export const courseSearchableFields = [
+export const ProductSearchableFields = [
   "page",
   "limit",
   "sortBy",
@@ -8,8 +8,8 @@ export const courseSearchableFields = [
   "tags",
   "manufacturingDate",
   "expireDate",
-  "language",
-  "provider",
-  "durationInWeeks",
   "level",
+  "name",
+  "description",
+  "price"
 ];

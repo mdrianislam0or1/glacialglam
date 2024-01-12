@@ -1,50 +1,28 @@
-// review.controller.ts
-
-import { Request, Response } from "express";
-import { ReviewServices } from "./review.service";
+import { Request, Response, NextFunction } from "express";
+import httpStatus from "http-status";
+import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { IReview } from "./review.interface";
+import { ReviewServices } from "./review.service";
 
-const createReviewController = async (req: Request, res: Response) => {
-  try {
-    const { courseId, rating, review } = req.body;
-    // No need to extract userId from req.user since there is no authentication middleware
-    const reviewData: IReview = {
-      _id: undefined,
-      courseId,
-      rating,
-      review,
-    };
+const createReviewController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { productId, rating, review }: IReview = req.body;
 
-    const createdReview = await ReviewServices.createReviewFromDB(reviewData);
+    // Add any additional validation logic here
 
-    const response = {
-      statusCode: 201,
+    const createdReview = await ReviewServices.createReview({ productId, rating, review });
+
+    sendResponse(res, {
       success: true,
+      statusCode: httpStatus.CREATED,
       message: "Review created successfully",
-      data: {
-        _id: createdReview._id,
-        courseId: createdReview.courseId,
-        rating: createdReview.rating,
-        review: createdReview.review,
-      },
-    };
-
-    sendResponse(res, response);
-  } catch (error: any) {
-    const response = {
-      statusCode: 500,
-      success: false,
-      message: "Internal Server Error",
-      errorMessage: error.message,
-      errorDetails: error.errorDetails,
-      stack: error.stack,
-    };
-
-    sendResponse(res, response);
+      data: createdReview,
+    });
   }
-};
+);
+
 
 export const ReviewControllers = {
   createReviewController,
-};
+}

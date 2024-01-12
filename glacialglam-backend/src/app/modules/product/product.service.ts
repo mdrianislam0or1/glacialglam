@@ -1,18 +1,16 @@
-import { populate } from "dotenv";
 import ReviewModel from "../review/review.model";
 import { IProduct } from "./product.interface";
 import QueryBuilder from "../../Query/Query";
-import { courseSearchableFields } from "./product.constant";
 import { IReview } from "../review/review.interface";
 import ProductModel from "./product.model";
 
-const createProductDB = async (courseData: IProduct): Promise<IProduct> => {
-  const createdCourse = await ProductModel.create({
-    ...courseData,
+const createProductDB = async (productData: IProduct): Promise<IProduct> => {
+  const createProduct = await ProductModel.create({
+    ...productData,
     createdAt: new Date(),
     updatedAt: new Date(),
   });
-  return createdCourse;
+  return createProduct;
 };
 
 
@@ -146,128 +144,125 @@ const updateProductFromDB = async (
       }
     }
 
-    const updatedCourse = await existingProduct.save();
+    const updateProduct = await existingProduct.save();
 
-    return updatedCourse;
+    return updateProduct;
   } catch (error:any) {
     throw error;
   }
 };
 
-// const getCourseWithReviewsFromDB = async (
-//   productId: string
-// ): Promise<{ course: IProduct; reviews: IReview[] } | null> => {
-//   try {
-//     const course = await ProductModel.findById(productId)
-//       .select("-createdAt -updatedAt -__v")
-//       .populate({
-//         path: "createdBy",
-//         select: "-password -passwordChangeHistory",
-//       });
+const getReviewByProductId = async (
+  productId: string
+): Promise<{ product: IProduct; reviews: IReview[] } | null> => {
+  try {
+    const product = await ProductModel.findById(productId)
+      .select("-createdAt -updatedAt -__v")
+      .populate({
+        path: "createdBy",
+        select: "-password -passwordChangeHistory",
+      });
 
-//     if (!course) {
-//       return null;
-//     }
+    if (!product) {
+      return null;
+    }
 
-//     const reviews = await ReviewModel.find({ productId })
-//       .select("-createdAt -updatedAt -__v")
-//       .populate({
-//         path: "createdBy",
-//         select: "-password -passwordChangeHistory",
-//       });
+    const reviews = await ReviewModel.find({ productId })
+      .select("-createdAt -updatedAt -__v")
+      .populate({
+        path: "createdBy",
+        select: "-password -passwordChangeHistory",
+      });
 
-//     return { course, reviews };
-//   } catch (error) {
-//     throw error;
-//   }
-// };
+    return { product, reviews };
+  } catch (error) {
+    throw error;
+  }
+};
 
-// const getBestCourseFromDB = async (): Promise<{
-//   course: IProduct;
-//   averageRating: number;
-//   reviewCount: number;
-// } | null> => {
-//   try {
-//     const coursesWithAverageRating = await ProductModel.aggregate([
-//       {
-//         $lookup: {
-//           from: "reviews",
-//           localField: "_id",
-//           foreignField: "productId",
-//           as: "reviews",
-//         },
-//       },
-//       {
-//         $addFields: {
-//           averageRating: {
-//             $avg: "$reviews.rating",
-//           },
-//           reviewCount: {
-//             $size: "$reviews",
-//           },
-//         },
-//       },
-//       {
-//         $sort: {
-//           averageRating: -1,
-//           reviewCount: -1,
-//         },
-//       },
-//       {
-//         $limit: 1,
-//       },
-//       {
-//         $lookup: {
-//           from: "users",
-//           localField: "createdBy",
-//           foreignField: "_id",
-//           as: "createdBy",
-//         },
-//       },
-//       {
-//         $unwind: "$createdBy",
-//       },
-//       {
-//         $project: {
-//           title: 1,
-//           madeIn: 1,
-//           categoryId: 1,
-//           price: 1,
-//           tags: 1,
-//           manufacturingDate: 1,
-//           expireDate: 1,
-//           language: 1,
-//           provider: 1,
-//           durationInWeeks: 1,
-//           details: 1,
-//           createdBy: {
-//             _id: 1,
-//             username: 1,
-//             email: 1,
-//             role: 1,
-//           },
-//           createdAt: 1,
-//           updatedAt: 1,
-//           averageRating: 1,
-//           reviewCount: 1,
-//         },
-//       },
-//     ]);
+const getBestProduct = async (): Promise<{
+  product: IProduct;
+  averageRating: number;
+  reviewCount: number;
+} | null> => {
+  try {
+    const productsWithAverageRating = await ProductModel.aggregate([
+      {
+        $lookup: {
+          from: "reviews",
+          localField: "_id",
+          foreignField: "productId",
+          as: "reviews",
+        },
+      },
+      {
+        $addFields: {
+          averageRating: {
+            $avg: "$reviews.rating",
+          },
+          reviewCount: {
+            $size: "$reviews",
+          },
+        },
+      },
+      {
+        $sort: {
+          averageRating: -1,
+          reviewCount: -1,
+        },
+      },
+      {
+        $limit: 1,
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "createdBy",
+          foreignField: "_id",
+          as: "createdBy",
+        },
+      },
+      {
+        $unwind: "$createdBy",
+      },
+      {
+        $project: {
+          title: 1,
+          madeIn: 1,
+          categoryId: 1,
+          price: 1,
+          tags: 1,
+          manufacturingDate: 1,
+          expireDate: 1,
+          details: 1,
+          createdBy: {
+            _id: 1,
+            username: 1,
+            email: 1,
+            role: 1,
+          },
+          createdAt: 1,
+          updatedAt: 1,
+          averageRating: 1,
+          reviewCount: 1,
+        },
+      },
+    ]);
 
-//     if (coursesWithAverageRating.length === 0) {
-//       return null;
-//     }
+    if (productsWithAverageRating.length === 0) {
+      return null;
+    }
 
-//     return coursesWithAverageRating[0];
-//   } catch (error) {
-//     throw error;
-//   }
-// };
+    return productsWithAverageRating[0];
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const ProductServices = {
   createProductDB,
   getProductsFromDB,
   updateProductFromDB,
-  // getCourseWithReviewsFromDB,
-  // getBestCourseFromDB,
+  getReviewByProductId,
+  getBestProduct,
 };

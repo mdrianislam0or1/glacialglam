@@ -23,11 +23,12 @@ router.put(
   ProductControllers.updateProductController
 );
 
-// router.get(
-//   "/products/:courseId/reviews",
-//   CourseControllers.getCourseWithReviewsController
-// );
+router.get(
+  "/products/:productId/reviews",
+  ProductControllers.getReviewWithProductController
+);
 
-// router.get("/course/best", CourseControllers.getBestCourseController);
+router.get("/product/best", 
+ProductControllers.getBestProductController);
 
 export const ProductsRoutes = router;

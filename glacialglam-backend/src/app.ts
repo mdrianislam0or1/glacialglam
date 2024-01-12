@@ -16,7 +16,7 @@ app.use("/", router);
 app.get("/", (req: Request, res: Response) => {
   res.status(200).json({
     status: "success",
-    message: "Welcome to CourseExplorerHub API",
+    message: "Welcome to ProductExplorerHub API",
   });
 });
 

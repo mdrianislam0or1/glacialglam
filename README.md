@@ -24,3 +24,6 @@ When interacting with the API, you can utilize the following query parameters to
 
     level: (Optional) Filters results by the 
     difficulty level of the product. Example: ?level=new
+
+
+
