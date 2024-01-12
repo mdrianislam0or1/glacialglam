@@ -1,28 +1,57 @@
-import { Request, Response, NextFunction } from "express";
-import httpStatus from "http-status";
-import catchAsync from "../../utils/catchAsync";
-import sendResponse from "../../utils/sendResponse";
+import { Request, Response } from "express";
 import { IReview } from "./review.interface";
 import { ReviewServices } from "./review.service";
+import sendResponse from "../../utils/sendResponse";
 
-const createReviewController = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const { productId, rating, review }: IReview = req.body;
+const createReviewController = async (req: Request, res: Response) => {
+  try {
+    const { productId, rating, review } = req.body;
+    const userId = req.user._id;
 
-    // Add any additional validation logic here
+    const reviewData: IReview = {
+      productId,
+      rating,
+      review,
+      createdBy: userId,
+    };
 
-    const createdReview = await ReviewServices.createReview({ productId, rating, review });
+    const createdReview = await ReviewServices.createReview(reviewData, userId);
 
-    sendResponse(res, {
+    const response = {
+      statusCode: 201,
       success: true,
-      statusCode: httpStatus.CREATED,
       message: "Review created successfully",
-      data: createdReview,
-    });
-  }
-);
+      data: {
+        _id: createdReview._id,
+        productId: createdReview.productId,
+        rating: createdReview.rating,
+        review: createdReview.review,
+        createdBy: {
+          _id: userId,
+          username: req?.user?.username,
+          email: req.user.email,
+          role: req.user.role,
+        },
+        createdAt: createdReview.createdAt,
+        updatedAt: createdReview.updatedAt,
+      },
+    };
 
+    sendResponse(res, response);
+  } catch (error: any) {
+    const response = {
+      statusCode: 500,
+      success: false,
+      message: "Internal Server Error",
+      errorMessage: error.message,
+      errorDetails: error.errorDetails,
+      stack: error.stack,
+    };
+
+    sendResponse(res, response);
+  }
+};
 
 export const ReviewControllers = {
   createReviewController,
-}
+};

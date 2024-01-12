@@ -5,5 +5,7 @@ export type IReview = {
   productId: Types.ObjectId;
   rating: number;
   review: string;
-
+  createdBy: Types.ObjectId;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
