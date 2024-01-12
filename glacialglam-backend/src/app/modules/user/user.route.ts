@@ -1,15 +1,24 @@
-import express from 'express';
-import { UserControllers } from './user.controller';
-
+import express from "express";
+import { UserControllers } from "./user.controller";
+import {
+  changePasswordValidation,
+  createUserValidation,
+  loginUserValidation,
+} from "./user.validation";
+import validateRequest from "../../middleware/validateRequest";
 const router = express.Router();
+router.post(
+  "/register",
+  validateRequest(createUserValidation),
+  UserControllers.UserController
+);
 
-// Create a new user
-router.post('/register', UserControllers.createUser);
-router.get('/', UserControllers.getAllUsers);
-router.post('/login', UserControllers.login);
-router.get('/:userId', UserControllers.getSingleUser);
-// Update a single user by ID
-router.put('/:userId', UserControllers.updateSingleUser);
-// Delete a single user
-router.delete('/:userId', UserControllers.deleteSingleUser);
-export const UserRoutes = router;
+router.post("/login", UserControllers.userLoginController);
+
+router.post(
+  "/change-password",
+  validateRequest(changePasswordValidation),
+  UserControllers.changePasswordController
+);
+
+export const UserRouters = router;

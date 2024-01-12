@@ -1,20 +1,27 @@
-export interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  sizes: string[];
-  colors: string[];
-  material: string;
-  features: string[];
-  images: string[];
-  reviews: Review[];
-  availability: boolean;
-  relatedProducts: string[];
-}
+import { Types } from "mongoose";
 
-export interface Review {
-  username: string;
-  rating: number;
-  comment: string;
-}
+export type ITag = {
+  name: string;
+  isDeleted: boolean;
+};
+
+export type IDetails = {
+  level: "old" | "new" | "special";
+  description: string;
+};
+
+export type IProduct = {
+  _id: Types.ObjectId;
+  name: string;
+  image: string;
+  brand: string;
+  description: string;
+  categoryId: Types.ObjectId;
+  price: number;
+  tags: ITag[];
+  manufacturingDate: string;
+  expireDate: string;
+  countInStock: number;
+  details: IDetails;
+  createdBy: Types.ObjectId;
+};

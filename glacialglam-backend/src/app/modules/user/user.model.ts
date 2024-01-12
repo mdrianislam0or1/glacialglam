@@ -1,29 +1,114 @@
-import mongoose, { Schema } from 'mongoose';
-import { UserRegistration } from './user.interface';
+import { Schema, model } from "mongoose";
+import { TUser, UserModel } from "./user.interface";
+import bcrypt from "bcrypt";
+import config from "../../config";
 
-export type RegisteredUser = UserRegistration & mongoose.Document;
-
-const userRegistrationSchema = new Schema<RegisteredUser>({
-  name: { type: String, required: true },
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  role: { type: String, enum: ['admin', 'user'] },
-  status: { type: String, enum: ['active', 'inactive'] },
-  password: { type: String, required: true },
-  phoneNumber: { type: String, required: true },
-  shippingAddress: {
-    street: { type: String, required: true },
-    city: { type: String, required: true },
-    state: { type: String, required: true },
-    postalCode: { type: String, required: true },
-    country: { type: String, required: true },
+const userSchema = new Schema<TUser, UserModel>({
+  username: {
+    type: String,
+    unique: true,
+    required: true,
   },
+  email: {
+    type: String,
+    unique: true,
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  role: {
+    type: String,
+    enum: ["user", "admin"],
+    default: "user",
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
+  },
+
+  passwordChangeHistory: [
+    {
+      password: {
+        type: String,
+        required: true,
+      },
+      timestamp: {
+        type: Date,
+        required: true,
+      },
+    },
+  ],
 });
 
-const UserRegistrationModel = mongoose.model<RegisteredUser>(
-  'UserRegistration',
-  userRegistrationSchema,
-);
+userSchema.pre("save", async function (next) {
+  const user = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds)
+  );
+  next();
+});
 
-export default UserRegistrationModel;
+userSchema.post("save", function (doc, next) {
+  doc.password = "";
+  next();
+});
+
+userSchema.statics.findByCredentials = async function (
+  username: string,
+  password: string
+) {
+  const user = await User.findOne({ username }).select("+password");
+  if (!user) {
+    throw new Error("Invalid login credentials");
+  }
+
+  const isPasswordMatched = await User.isPasswordMatched(
+    password,
+    user.password
+  );
+
+  if (!isPasswordMatched) {
+    throw new Error("Invalid login credentials");
+  }
+
+  return user;
+};
+
+userSchema.statics.isUserExistById = async function (_id: string) {
+  return await User.findOne({ _id }).select("+password");
+};
+
+userSchema.statics.isPasswordMatched = async function (
+  plainTextPassword: string,
+  hashPassword: string
+) {
+  return await bcrypt.compare(plainTextPassword, hashPassword);
+};
+
+userSchema.statics.isJWTIssuedBeforePasswordChanged = function (
+  passwordChangedTimestamp: Date,
+  jwtIssuedTimestamp: number
+) {
+  const passwordChangedTime =
+    new Date(passwordChangedTimestamp).getTime() / 1000;
+
+  return passwordChangedTime > jwtIssuedTimestamp;
+
+  return false;
+};
+
+userSchema.methods.isPasswordMatched = async function (
+  enteredPassword: string,
+  hashedPassword: string
+) {
+  return await bcrypt.compare(enteredPassword, hashedPassword);
+};
+
+export const User = model<TUser, UserModel>("User", userSchema);

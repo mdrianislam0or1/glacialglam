@@ -1,19 +1,30 @@
-export type Address = {
-  street: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country: string;
-};
+import { Model } from "mongoose";
+import { USER_ROLE } from "./user.constant";
 
-export type UserRegistration = {
-  name: string;
-  firstName: string;
-  lastName: string;
+export interface TUser {
+  _id: string;
+  username: string;
   email: string;
-  role: 'admin' | 'user';
-  status: 'active' | 'inactive';
   password: string;
-  phoneNumber: string;
-  shippingAddress: Address;
-};
+  role: "user" | "admin";
+  createdAt?: string;
+  updatedAt?: string;
+  passwordChangeHistory?: {
+    password: string;
+    timestamp: string;
+  }[];
+}
+
+export interface UserModel extends Model<TUser> {
+  isUserExistById(_id: string): Promise<TUser>;
+  isPasswordMatched(
+    plainTextPassword: string,
+    hashedPassword: string
+  ): Promise<boolean>;
+  isJWTIssuedBeforePasswordChanged(
+    passwordChangedTimestamp: Date,
+    jwtIssuedTimestamp: number
+  ): boolean;
+}
+
+export type TUserRole = keyof typeof USER_ROLE;

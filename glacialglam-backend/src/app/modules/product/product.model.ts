@@ -1,31 +1,34 @@
-import mongoose, { Schema } from 'mongoose';
-import { Product } from './product.interface';
+import { Schema, Types, model } from "mongoose";
+import { IProduct } from "./product.interface";
 
-export type ProductDocument = Product & mongoose.Document;
-
-const reviewSchema = new Schema({
-  username: { type: String, required: true },
-  rating: { type: Number, required: true },
-  comment: { type: String, required: true },
-});
-
-const productSchema = new Schema<ProductDocument>(
-  {
-    name: { type: String, required: true },
-    description: { type: String, required: true },
-    price: { type: Number, required: true },
-    sizes: [{ type: String }],
-    colors: [{ type: String }],
-    material: { type: String },
-    features: [{ type: String }],
-    images: [{ type: String }],
-    reviews: [reviewSchema],
-    availability: { type: Boolean, default: true },
-    relatedProducts: [{ type: mongoose.Types.ObjectId, ref: 'Product' }],
+const ProductSchema = new Schema<IProduct>({
+  name: { type: String, required: true },
+  image: { type: String, required: true },
+  brand: { type: String, required: true },
+  description: { type: String, required: true },
+  categoryId: {
+    type: Schema.Types.ObjectId,
+    ref: "Category",
+    required: true,
   },
-  { timestamps: true },
+  price: { type: Number, required: true },
+  tags: [{ name: { type: String, required: true }, isDeleted: { type: Boolean, required: true } }],
+  manufacturingDate: { type: String, required: true },
+  expireDate: { type: String, required: true },
+  countInStock: { type: Number, required: true },
+  details: {
+    level: { type: String, enum: ["old", "new", "special"], required: true },
+    description: { type: String, required: true },
+  },
+  createdBy: { 
+    type: Schema.Types.ObjectId, ref: "User", required: true  }, 
+},
+{
+  timestamps: true,
+}
+
 );
 
-const ProductModel = mongoose.model<ProductDocument>('Product', productSchema);
+const ProductModel = model<IProduct>('Product', ProductSchema);
 
 export default ProductModel;

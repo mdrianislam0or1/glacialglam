@@ -1,21 +1,26 @@
-import cors from 'cors';
-import express, { Application, Request, Response } from 'express';
-import router from './app/routes';
+import { Application } from "express";
+import express, { Request, Response } from "express";
+import cors from "cors";
+import errorHandler from "./app/middleware/errorHandler";
+import router from "./app/routes";
 
 const app: Application = express();
 
 app.use(express.json());
 app.use(cors());
 
-app.use('/api', router);
+// Routes
+app.use("/", router);
 
-const getAController = (req: Request, res: Response) => {
-  res.send(200).json({
-    success: true,
-    message: `'Welcome to the API!'`,
+// Default route
+app.get("/", (req: Request, res: Response) => {
+  res.status(200).json({
+    status: "success",
+    message: "Welcome to CourseExplorerHub API",
   });
-};
+});
 
-app.get('/', getAController);
+// error handler
+app.use(errorHandler);
 
 export default app;

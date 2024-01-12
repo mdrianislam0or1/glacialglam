@@ -1,0 +1,15 @@
+export const courseSearchableFields = [
+  "page",
+  "limit",
+  "sortBy",
+  "sortOrder",
+  "minPrice",
+  "maxPrice",
+  "tags",
+  "manufacturingDate",
+  "expireDate",
+  "language",
+  "provider",
+  "durationInWeeks",
+  "level",
+];

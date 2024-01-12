@@ -1,20 +1,33 @@
-import express from 'express';
-import { ProductControllers } from './product.controller';
-import { admin, protect } from '../../middlewares/authMiddleware';
+import express from "express";
+import {  ProductControllers } from "./product.controller";
+import auth from "../../middleware/auth";
+import validateRequest from "../../middleware/validateRequest";
+import { ProductSchema } from "./product.validation";
 
 const router = express.Router();
 
-// Use the product routes
-router.use('/create-product', ProductControllers.createProduct);
-// Get all products
-router.get('/', ProductControllers.getAllProducts);
+router.post(
+  "/product",
+  auth("admin"),
+  validateRequest(ProductSchema),
+  ProductControllers.createProductController
+);
 
-// Get a single product by ID
-router.get('/:productId', ProductControllers.getSingleProduct);
+router.get("/products",
+ ProductControllers.getProductController);
 
-// Update a single product by ID
-router.put('/:productId', ProductControllers.updateSingleProduct);
+router.put(
+  "/products/:productId",
+  auth("admin"),
+  validateRequest(ProductSchema)  ,
+  ProductControllers.updateProductController
+);
 
-// Delete a single product by ID
-router.delete('/:productId', ProductControllers.deleteProduct);
-export const ProductRoutes = router;
+// router.get(
+//   "/products/:courseId/reviews",
+//   CourseControllers.getCourseWithReviewsController
+// );
+
+// router.get("/course/best", CourseControllers.getBestCourseController);
+
+export const ProductsRoutes = router;
