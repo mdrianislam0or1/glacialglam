@@ -180,13 +180,15 @@ const getReviewByProductId = async (
   }
 };
 
+
+
 const getBestProduct = async (): Promise<{
   product: IProduct;
   averageRating: number;
   reviewCount: number;
 } | null> => {
   try {
-    const productsWithAverageRating = await ProductModel.aggregate([
+    const bestProduct = await ProductModel.aggregate([
       {
         $lookup: {
           from: "reviews",
@@ -197,12 +199,8 @@ const getBestProduct = async (): Promise<{
       },
       {
         $addFields: {
-          averageRating: {
-            $avg: "$reviews.rating",
-          },
-          reviewCount: {
-            $size: "$reviews",
-          },
+          averageRating: { $avg: "$reviews.rating" },
+          reviewCount: { $size: "$reviews" },
         },
       },
       {
@@ -215,45 +213,32 @@ const getBestProduct = async (): Promise<{
         $limit: 1,
       },
       {
-        $lookup: {
-          from: "users",
-          localField: "createdBy",
-          foreignField: "_id",
-          as: "createdBy",
-        },
-      },
-      {
-        $unwind: "$createdBy",
-      },
-      {
         $project: {
-          title: 1,
-          madeIn: 1,
+          _id: 1,
+          name: 1,
+          instructor: 1,
           categoryId: 1,
           price: 1,
           tags: 1,
           manufacturingDate: 1,
           expireDate: 1,
+          countInStock: 1,
           details: 1,
-          createdBy: {
-            _id: 1,
-            username: 1,
-            email: 1,
-            role: 1,
-          },
-          createdAt: 1,
-          updatedAt: 1,
           averageRating: 1,
           reviewCount: 1,
         },
       },
     ]);
 
-    if (productsWithAverageRating.length === 0) {
+    if (bestProduct.length === 0) {
       return null;
     }
 
-    return productsWithAverageRating[0];
+    return {
+      product: bestProduct[0],
+      averageRating: bestProduct[0].averageRating || 0,
+      reviewCount: bestProduct[0].reviewCount || 0,
+    };
   } catch (error) {
     throw error;
   }

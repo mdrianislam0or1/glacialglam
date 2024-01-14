@@ -9,7 +9,7 @@ import validateRequest from "../../middleware/validateRequest";
 const router = express.Router();
 router.post(
   "/register",
-  validateRequest(createUserValidation),
+  // validateRequest(createUserValidation),
   UserControllers.UserController
 );
 
@@ -17,7 +17,7 @@ router.post("/login", UserControllers.userLoginController);
 
 router.post(
   "/change-password",
-  validateRequest(changePasswordValidation),
+  // validateRequest(changePasswordValidation),
   UserControllers.changePasswordController
 );
 

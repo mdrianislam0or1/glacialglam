@@ -29,6 +29,7 @@ router.get(
 );
 
 router.get("/product/best", 
-ProductControllers.getBestProductController);
+ProductControllers.getBestProductController
+);
 
 export const ProductsRoutes = router;

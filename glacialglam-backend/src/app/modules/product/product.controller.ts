@@ -152,6 +152,7 @@ const getReviewWithProductController = async (req: Request, res: Response) => {
   }
 };
 
+
 const getBestProductController = async (req: Request, res: Response) => {
   try {
     const bestProduct = await ProductServices.getBestProduct();
@@ -160,7 +161,7 @@ const getBestProductController = async (req: Request, res: Response) => {
       sendResponse(res, {
         success: true,
         statusCode: 200,
-        message: "Best Product retrieved successfully",
+        message: "Best product retrieved successfully",
         data: bestProduct,
       });
     } else {
