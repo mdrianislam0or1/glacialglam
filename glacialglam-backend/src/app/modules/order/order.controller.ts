@@ -110,19 +110,73 @@ const getMyOrdersController = catchAsync(async (req: Request, res: Response) => 
   
 
 
-const paymentController = catchAsync(async (req: Request, res: Response) => {
-  stripeClient.charges.create({
-    source: req.body.tokenId,
-    amount: req.body.amount,
-    currency: "usd",
-  }).then((response) => {
-    res.status(200).json(response);
-  }).catch((error) => {
-    console.log(error);
-    res.status(400).json({ error });
-  });
+// payment start
+const processPaymentController = catchAsync(async (req: Request, res: Response) => {
+  const tokenId = req.body.tokenId;
+  const amount = req.body.amount;
+
+  try {
+    const paymentResult = await OrderServices.processPayment(tokenId, amount);
+
+    // Check if the payment was successful
+    if (paymentResult.status === "succeeded") {
+      // Update the order as paid
+      const orderId = req.params.orderId;
+      const updatedOrder = await OrderServices.markOrderAsPaid(orderId);
+
+      if (!updatedOrder) {
+        return sendResponse(res, {
+          success: false,
+          statusCode: 404,
+          message: "Order not found.",
+        });
+      }
+
+      sendResponse(res, {
+        success: true,
+        statusCode: 200,
+        data: {
+          paymentResult,
+          updatedOrder,
+        },
+        message: "Payment processed successfully, and order marked as paid.",
+      });
+    } else {
+      sendResponse(res, {
+        success: false,
+        statusCode: 400,
+        message: "Payment failed.",
+        data: {
+          paymentResult,
+        },
+      });
+    }
+  } catch (error:any) {
+    console.error('Error processing payment:', error.message);
+    res.status(500).json({ error: 'Failed to process payment' });
+  }
+});
+
+// payment end
+
+
+
+
+
+// const paymentController = catchAsync(async (req: Request, res: Response) => {
+//   stripeClient.charges.create({
+//     source: req.body.tokenId,
+//     amount: req.body.amount,
+//     currency: "usd",
+//   }).then((response) => {
+    
+//     res.status(200).json(response);
+//   }).catch((error) => {
+//     console.log(error);
+//     res.status(400).json({ error });
+//   });
   
-})
+// })
 
 
 // payment intent
@@ -229,6 +283,7 @@ export const OrderControllers = {
     updateOrderToPaidController,
     updateOrderToDeliveredController,
     createPaymentIntentController,
-    paymentController 
+    processPaymentController,
+    // paymentController 
 
 };

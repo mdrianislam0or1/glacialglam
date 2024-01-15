@@ -6,6 +6,7 @@ import { TUser } from "../user/user.interface";
 import { IOrder, IOrderItemsFromDB, IOrderItem } from "./order.interface";
 import Order, { IOrderDocument } from "./order.model";
 import Stripe from "stripe";
+import { Request } from "express";
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY // Replace with your actual Stripe secret key
 const stripeClient = new Stripe(stripeSecretKey || "");
@@ -97,11 +98,21 @@ const getOrderByIdFromDB = async (orderId: string, user: TUser): Promise<IOrderD
   }
 };
 
-// const getPaymentFromDB = async(req,res)=>{
-//   stripeClient.charges.create({
-//     source: req.body.tokenId,
-//   })
-// }
+
+const processPayment = async (tokenId: string, amount: number): Promise<any> => {
+  try {
+    const paymentIntent = await stripeClient.charges.create({
+      source: tokenId,
+      amount: Math.round(amount * 100),
+      currency: "usd",
+    });
+
+    return paymentIntent;
+  } catch (error) {
+    throw error;
+  }
+};
+
 
 
 //payment start
@@ -204,5 +215,6 @@ export const OrderServices = {
   updateOrderToPaid,
   updateOrderToDelivered,
   createPaymentIntent,
-  markOrderAsPaid
+  markOrderAsPaid,
+  processPayment,
 };

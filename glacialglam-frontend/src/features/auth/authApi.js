@@ -14,17 +14,17 @@ export const authApi = apiSlice.injectEndpoints({
         try{
           const result = await queryFulfilled;
           localStorage.setItem("auth",JSON.stringify({
-            token:result.data.token,
-            user:result.data.user,
+            token: result?.data?.data?.token,
+            user: result?.data?.data?.user,
           }));
 
           dispatch(userLoggedIn({
-            token:result.data.token,
-            user:result.data.user,
+            token: result?.data?.data?.token,
+            user: result?.data?.data?.user,
           }));
         }
         catch(err){
-          alert(err);
+         console.log(err);
         }
       },
     }),
@@ -32,26 +32,22 @@ export const authApi = apiSlice.injectEndpoints({
     
 
     login: builder.mutation({
-      query:(data)=>({
-        url:"/auth/login",
-        method:"POST",
-        body:data,
+      query: (data) => ({
+        url: "/auth/login",
+        method: "POST",
+        body: data,
       }),
-      async onQueryStarted(arg,{queryFulfilled,dispatch}){
-        try{
+      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+        try {
           const result = await queryFulfilled;
-          localStorage.setItem("auth",JSON.stringify({
-            token:result.data.token,
-            user:result.data.user,
-          }));
-
+          localStorage.setItem("auth", JSON.stringify(result)); // Store the entire result in local storage
+          
           dispatch(userLoggedIn({
-            token:result.data.token,
-            user:result.data.user,
+            token: result?.data?.data?.token,
+            user: result?.data?.data?.user,
           }));
-        }
-        catch(err){
-          alert(err);
+        } catch (err) {
+          console.log(err);
         }
       },
     }),

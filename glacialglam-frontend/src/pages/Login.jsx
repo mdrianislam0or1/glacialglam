@@ -1,125 +1,97 @@
-import React, { useEffect, useState } from 'react'
-import TextInput from '../ui/TextInput'
-import Error from '../ui/Error'
-import { Link, useNavigate } from 'react-router-dom'
-import { useLoginMutation } from '../features/auth/authApi'
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../features/auth/authApi";
+import {toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Error from "../ui/Error";
 
 const Login = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
+  const [username, setUserName] = useState("");
+  const [password, setPassword] = useState("");
 
-    const [login, { data, isLoading, error: responseError }] =
-        useLoginMutation();
+  const [login, { data, isLoading, isSuccess,isError }] =
+   useLoginMutation();
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        if (responseError?.data) {
-            setError(responseError.data);
-        }
-        if (data?.accessToken && data?.user) {
-            navigate("/inbox");
-        }
-    }, [data, responseError, navigate]);
+  useEffect(() => {
+    if (data?.data?.token && data?.data?.user) {
+        localStorage.setItem("auth", JSON.stringify({
+          token: data?.data?.token,
+          user: data?.data?.user,
+        }));
+        navigate("/inbox");
+      }
+      
+  }, [data, navigate]);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+  console.log(data?.data?.token);
 
-        setError("");
+  const onSubmit = (e) => {
+    e.preventDefault();
 
-        login({
-            email,
-            password,
-        });
+   if(password.length < 1){
+    toast.error("Password should be at least 6 characters long");
+   }else{
+    const userData = {
+      username,
+      password,
     };
+    login(userData);
+   }
+
+   
+  };
 
   return (
     <div>
-          <div className="grid place-items-center h-screen bg-[#F9FAFB">
-            <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-md w-full space-y-8">
-                    <div>
-                        <Link to="/">
-                            <img
-                                className="mx-auto h-12 w-auto"
-                                src=""
-                                alt="Glacial Glam Logo"
-                            />
-                        </Link>
-                        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                            Sign in to your account
-                        </h2>
-                    </div>
-                    <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-                        <div className="rounded-md shadow-sm -space-y-px">
-                            <div>
-                                <label
-                                    htmlFor="email-address"
-                                    className="sr-only"
-                                >
-                                    Email address
-                                </label>
-                                <TextInput
-                                    id="email-address"
-                                    name="email"
-                                    type="email"
-                                    autoComplete="email"
-                                    required
-                                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-violet-500 focus:border-violet-500 focus:z-10 sm:text-sm"
-                                    placeholder="Email address"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="password" className="sr-only">
-                                    Password
-                                </label>
-                                <TextInput
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    autoComplete="current-password"
-                                    required
-                                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-violet-500 focus:border-violet-500 focus:z-10 sm:text-sm"
-                                    placeholder="Password"
-                                    value={password}
-                                    onChange={(e) =>
-                                        setPassword(e.target.value)
-                                    }
-                                />
-                            </div>
-                        </div>
-
-                        <div className="flex items-center justify-end">
-                            <div className="text-sm">
-                                <Link
-                                    to="/register"
-                                    className="font-medium text-violet-600 hover:text-violet-500"
-                                >
-                                    Register
-                                </Link>
-                            </div>
-                        </div>
-
-                        <div>
-                            <button
-                                type="submit"
-                                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500"
-                                disabled={isLoading}
-                            >
-                                Sign in
-                            </button>
-                        </div>
-
-                        {error !== "" && <Error message={error} />}
-                    </form>
-                </div>
+      <div className="grid place-items-center h-screen bg-[#F9FAFB">
+        <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-md w-full space-y-8">
+            <div>
+              <Link to="/">
+                <img
+                  className="mx-auto h-12 w-auto"
+                  src=""
+                  alt="Glacial Glam Logo"
+                />
+              </Link>
+              <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                Sign in to your account
+              </h2>
             </div>
-        </div>
-    </div>
-  )
-}
 
-export default Login
+            <form onSubmit={onSubmit} className="mt-6">
+              <input
+                type="text"
+                name="username"
+                value={username}
+                onChange={(e)=>setUserName(e.target.value)}
+                placeholder="Username"
+                className="input-field my-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+              <input
+                type="password"
+                name="password"
+                value={password}
+                onChange={(e)=>setPassword(e.target.value)}
+                placeholder="Password"
+                className="input-field my-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+              <div className="text-center">
+                <button className="btn btn-active btn-neutral" type="submit">
+                  Login
+                </button>
+              </div>
+              {isError && <Error message="there was an error" />}
+              {isLoading && <div>Loading...</div>}
+              {isSuccess && <div>Success</div>}
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Login;

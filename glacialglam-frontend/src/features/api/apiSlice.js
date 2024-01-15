@@ -4,9 +4,9 @@ import { userLoggedOut } from "../auth/authSlice";
 const baseQuery = fetchBaseQuery({
   baseUrl:`http://localhost:5000/api`,
   prepareHeaders: async (headers, { getState, endpoint }) => {
-    const token = getState()?.auth?.accessToken;
-    if (token) {
-      headers.set("Authorization", `${token}`);
+    const accessToken = getState()?.auth?.token;
+    if (accessToken) {
+      headers.set("Authorization", `${accessToken}`);
     }
 
     return headers;

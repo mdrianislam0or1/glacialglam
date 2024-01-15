@@ -19,8 +19,8 @@ router.post("/addOrder", auth("admin", "user"),
  OrderControllers.getOrderByIdController);
 
 router.post('/payment',
-    auth("admin", "user"),
-    OrderControllers.paymentController
+    // auth("admin", "user"),
+    OrderControllers.processPaymentController
 )
 
 
