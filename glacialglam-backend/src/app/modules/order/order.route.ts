@@ -18,27 +18,10 @@ router.post("/addOrder", auth("admin", "user"),
   auth("admin", "user"),
  OrderControllers.getOrderByIdController);
 
-router.post('/payment',
+router.post('/payment/:orderId',
     // auth("admin", "user"),
-    OrderControllers.processPaymentController
-)
+    OrderControllers.processPaymentController)
 
-
-//payment start
-router.post("/create-payment-intent/:orderId",
-  auth("admin", "user"),
-  OrderControllers.createPaymentIntentController);
-
-//payment end
-
-
- router.post("/updateOrderToPaid/:orderId",
-  auth("admin"),
-  OrderControllers.updateOrderToPaidController);
-
-router.post("/updateOrderToDelivered/:orderId",
-  auth("admin"),
-  OrderControllers.updateOrderToDeliveredController);
 
 
 

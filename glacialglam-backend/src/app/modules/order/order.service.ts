@@ -98,6 +98,7 @@ const getOrderByIdFromDB = async (orderId: string, user: TUser): Promise<IOrderD
   }
 };
 
+//payment start
 
 const processPayment = async (tokenId: string, amount: number): Promise<any> => {
   try {
@@ -108,32 +109,6 @@ const processPayment = async (tokenId: string, amount: number): Promise<any> => 
     });
 
     return paymentIntent;
-  } catch (error) {
-    throw error;
-  }
-};
-
-
-
-//payment start
-const createPaymentIntent = async (
-  orderId: string
-): Promise<{ clientSecret: string }> => {
-  try {
-    const order = await Order.findById(orderId);
-
-    if (!order) {
-      throw new Error(`Order not found with id: ${orderId}`);
-    }
-
-    const { totalPrice } = order;
-
-    const paymentIntent = await stripeClient.paymentIntents.create({
-      amount: Math.round(totalPrice * 100), // Convert the amount to cents
-      currency: "usd", // Replace with your desired currency
-    });
-
-    return { clientSecret: paymentIntent.client_secret || "" };
   } catch (error) {
     throw error;
   }
@@ -161,49 +136,7 @@ const markOrderAsPaid = async (orderId: string): Promise<IOrderDocument | null> 
 
 //payment end
 
-const updateOrderToPaid = async (
-  orderId: string,
-  paymentResult: IOrder["paymentResult"]
-): Promise<IOrderDocument | null> => {
-  try {
-    const order = await Order.findById(orderId);
 
-    if (!order) {
-      throw new Error(`Order not found with id: ${orderId}`);
-    }
-
-    order.isPaid = true;
-    order.paidAt = new Date();
-    order.paymentResult = paymentResult;
-
-    const updatedOrder = await order.save();
-
-    return updatedOrder;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const updateOrderToDelivered = async (
-  orderId: string
-): Promise<IOrderDocument | null> => {
-  try {
-    const order = await Order.findById(orderId);
-
-    if (!order) {
-      throw new Error(`Order not found with id: ${orderId}`);
-    }
-
-    order.isDelivered = true;
-    order.deliveredAt = new Date();
-
-    const updatedOrder = await order.save();
-
-    return updatedOrder;
-  } catch (error) {
-    throw error;
-  }
-};
 
 
 
@@ -212,9 +145,7 @@ export const OrderServices = {
   addOrderItemsFromDB,
   getMyOrdersFromDB,
   getOrderByIdFromDB,
-  updateOrderToPaid,
-  updateOrderToDelivered,
-  createPaymentIntent,
   markOrderAsPaid,
   processPayment,
+  
 };

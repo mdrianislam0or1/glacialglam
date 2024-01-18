@@ -14,7 +14,30 @@ export const orderApi = apiSlice.injectEndpoints({
         },
       }),
     }),
+
+    getMyAllOrder: builder.query({
+      query: () => `/orders/myOrder`,
+      headers: {
+        'Authorization': `${JSON.parse(localStorage.getItem("auth"))?.token}`,
+        'Content-Type': 'application/json',
+      },
+      keepUnusedDataFor: 600,
+      providesTags: ["Order"],
+    }),
+    getOrderById: builder.query({
+      query: (orderId) => `/orders/myOrder/${orderId}`, // Update this line
+      headers: {
+        'Authorization': `${JSON.parse(localStorage.getItem("auth"))?.token}`,
+        'Content-Type': 'application/json',
+      },
+      keepUnusedDataFor: 600,
+      providesTags: ["Order"],
+    }),
   }),
 });
 
-export const { useAddOrderItemsMutation } = orderApi;
+export const {
+  useAddOrderItemsMutation,
+  useGetMyAllOrderQuery,
+  useGetOrderByIdQuery,
+} = orderApi;
