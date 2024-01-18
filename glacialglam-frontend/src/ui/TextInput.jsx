@@ -1,4 +1,5 @@
-export default function TextInput({ title, ...attributes }) {
+// TextInput.jsx
+export default function TextInput({ title, value, onChange }) {
     return (
         <>
             <label className="block text-sm font-medium text-gray-700">
@@ -7,7 +8,8 @@ export default function TextInput({ title, ...attributes }) {
             <input
                 type="text"
                 className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                {...attributes}
+                value={value}
+                onChange={onChange}
             />
         </>
     );
