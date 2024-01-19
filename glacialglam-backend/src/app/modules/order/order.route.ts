@@ -20,9 +20,25 @@ router.post("/addOrder", auth("admin", "user"),
 
 router.post('/payment/:orderId',
     // auth("admin", "user"),
-    OrderControllers.processPaymentController)
+OrderControllers.processPaymentController)
 
 
+// admin start
+router.get("/admin/allOrder",
+  auth("admin"),
+OrderControllers.getOrdersForAdminController);
+
+// delivered order
+router.post("/admin/orders/:orderId/deliver",
+  auth("admin"),
+  OrderControllers.updateOrderDeliveryStatusController);
+
+  // delete order
+  router.delete("/admin/orders/:orderId",
+  auth("admin"),
+  OrderControllers.deleteOrderController);
+
+// admin end
 
 
 export const OrderRoutes = router;

@@ -1,4 +1,3 @@
-// CreateProductForm.jsx
 import React, { useState } from "react";
 import { useCreateProductMutation } from "../../features/product/productApi";
 import TextArea from "../../ui/TextArea";
@@ -11,8 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 
 export const CreateProductForm = () => {
   const { token, user } = useSelector((state) => state.auth) || {};
-  console.log(token);
-  const [data, { isError, isLoading, isSuccess }] = useCreateProductMutation();
+  const [createProductMutation, { isError, isLoading, isSuccess }] = useCreateProductMutation();
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
   const [brand, setBrand] = useState("POCO");
@@ -49,9 +47,10 @@ export const CreateProductForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await data({
+      const formData = new FormData();
+      formData.append("file", image); // Assuming 'image' is the name of the field for the image
+      formData.append("data", JSON.stringify({
         name,
-        image,
         brand,
         categoryId,
         price,
@@ -62,6 +61,12 @@ export const CreateProductForm = () => {
         countInStock,
         details,
         createdBy,
+      }));
+  
+      const response = await createProductMutation(formData, {
+        headers: {
+          'Authorization': `${token}`,
+        },
       });
   
       if (response.error) {
@@ -75,6 +80,7 @@ export const CreateProductForm = () => {
     }
   };
   
+
   return (
     <div className="container mx-auto">
       <form method="POST" onSubmit={handleSubmit}>
@@ -89,12 +95,12 @@ export const CreateProductForm = () => {
                 />
               </div>
               <div className="col-span-6 sm:col-span-3">
-                <TextInput
-                  title="Image"
-                  value={image}
-                  onChange={(e) => setImage(e.target.value)}
-                />
-              </div>
+    <TextInput
+      title="Image"
+      type="file"
+      onChange={(e) => setImage(e.target.files[0])} // Use e.target.files[0] to get the selected file
+    />
+  </div>
               <div className="col-span-6 sm:col-span-3">
                 <TextInput
                   title="brand"
@@ -190,8 +196,8 @@ export const CreateProductForm = () => {
             </button>
           </div>
 
-          {isSuccess && toast.success("Create Product") && <Success message="Product was added successfully" />}
-          {isError && toast.error("Error Create Product") && <Error message="There was an error adding Product!" />}
+          {isSuccess && <Success message="Product was added successfully" />}
+          {isError && <Error message="There was an error adding Product!" />}
         </div>
       </form>
     </div>

@@ -6,7 +6,7 @@ import { TUser } from "../user/user.interface";
 import { IOrder, IOrderItemsFromDB, IOrderItem } from "./order.interface";
 import Order, { IOrderDocument } from "./order.model";
 import Stripe from "stripe";
-import { Request } from "express";
+
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY // Replace with your actual Stripe secret key
 const stripeClient = new Stripe(stripeSecretKey || "");
@@ -99,7 +99,6 @@ const getOrderByIdFromDB = async (orderId: string, user: TUser): Promise<IOrderD
 };
 
 //payment start
-
 const processPayment = async (tokenId: string, amount: number): Promise<any> => {
   try {
     const paymentIntent = await stripeClient.charges.create({
@@ -113,8 +112,6 @@ const processPayment = async (tokenId: string, amount: number): Promise<any> => 
     throw error;
   }
 };
-
-
 const markOrderAsPaid = async (orderId: string): Promise<IOrderDocument | null> => {
   try {
     const order = await Order.findById(orderId);
@@ -133,12 +130,53 @@ const markOrderAsPaid = async (orderId: string): Promise<IOrderDocument | null> 
     throw error;
   }
 };
-
 //payment end
 
 
+//admin start
+const getOrdersForAdminFromDB = async (): Promise<IOrderDocument[]> => {
+  try {
+    const orders = await Order.find().sort({ createdAt: -1 });
+    return orders;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//delivery 
+
+const updateOrderDeliveryStatus = async (orderId: string, isDelivered: boolean): Promise<IOrderDocument | null> => {
+  try {
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      throw new Error(`Order not found with id: ${orderId}`);
+    }
+
+    order.isDelivered = isDelivered;
+    order.deliveredAt = isDelivered ? new Date() : undefined;
+
+    const updatedOrder = await order.save();
+
+    return updatedOrder;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// delete order
+const deleteOrder = async (orderId: string): Promise<IOrderDocument | null> => {
+  try {
+    const order = await Order.findByIdAndDelete(orderId);
+
+    return order;
+  } catch (error) {
+    throw error;
+  }
+};
 
 
+//admin end
 
 
 export const OrderServices = {
@@ -147,5 +185,9 @@ export const OrderServices = {
   getOrderByIdFromDB,
   markOrderAsPaid,
   processPayment,
+  // admin
+  getOrdersForAdminFromDB,
+  updateOrderDeliveryStatus,
+  deleteOrder
   
 };

@@ -159,11 +159,93 @@ const processPaymentController = catchAsync(async (req: Request, res: Response) 
 
 // payment end
 
+// admin start
+const getOrdersForAdminController = catchAsync(async (req: Request, res: Response) => {
+  try {
+    const orders = await OrderServices.getOrdersForAdminFromDB();
 
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      data: orders,
+      message: 'All orders retrieved successfully.',
+    });
+  } catch (error:any) {
+    console.error('Error retrieving orders for admin:', error.message);
+    res.status(500).json({ error: 'Failed to retrieve orders for admin' });
+  }
+});
+
+
+// delivered order
+const updateOrderDeliveryStatusController = catchAsync(async (req: Request, res: Response) => {
+  const orderId = req.params.orderId;
+  const isDelivered = req.body.isDelivered;
+
+  try {
+    const updatedOrder = await OrderServices.updateOrderDeliveryStatus(orderId, isDelivered);
+
+    if (!updatedOrder) {
+      return sendResponse(res, {
+        success: false,
+        statusCode: 404,
+        message: "Order not found.",
+      });
+    }
+
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      data: updatedOrder,
+      message: `Order delivery status updated to ${isDelivered ? 'delivered' : 'not delivered'}.`,
+    });
+  } catch (error: any) {
+    console.error('Error updating order delivery status:', error.message);
+    res.status(500).json({ error: 'Failed to update order delivery status' });
+  }
+});
+
+
+//delivered order
+
+
+// delete order
+const deleteOrderController = catchAsync(async (req: Request, res: Response) => {
+  const orderId = req.params.orderId;
+
+  try {
+    const deletedOrder = await OrderServices.deleteOrder(orderId);
+
+    if (!deletedOrder) {
+      return sendResponse(res, {
+        success: false,
+        statusCode: 404,
+        message: "Order not found.",
+      });
+    }
+
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      data: deletedOrder,
+      message: "Order deleted successfully.",
+    });
+  } catch (error :any) {
+    console.error('Error deleting order:', error.message);
+    res.status(500).json({ error: 'Failed to delete order' });
+  }
+});
+
+
+// admin end
 
 export const OrderControllers = {
   addOrderItemsController,
     getMyOrdersController,
     getOrderByIdController,
     processPaymentController,
-};
+    //admin
+    getOrdersForAdminController,
+    updateOrderDeliveryStatusController,
+    deleteOrderController,
+  };

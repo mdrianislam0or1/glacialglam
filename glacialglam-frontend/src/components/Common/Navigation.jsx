@@ -71,6 +71,21 @@ export default function Navigation() {
       <li><NavLink to="/cart">Cart</NavLink></li>
       <li>
         <details>
+          <summary>Admin</summary>
+          <ul className="p-2">
+           
+            <li>
+              <Link to="/admin/all-order">All Order</Link>
+            </li>
+            <li>
+              <Link to="/admin/create-product">Create Product</Link>
+            </li>
+            
+          </ul>
+        </details>
+      </li>
+      <li>
+        <details>
           <summary>Menu</summary>
           <ul className="p-2">
            
@@ -84,9 +99,7 @@ export default function Navigation() {
               <Link to="/cart"> Cart</Link>
             </li>
 
-            <li>
-              <Link to="/admin/create-product">Create Product</Link>
-            </li>
+           
             
           </ul>
         </details>

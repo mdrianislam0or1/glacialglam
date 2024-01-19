@@ -8,7 +8,12 @@ import { ProductServices } from "./product.service";
 const createProductController = catchAsync(
   async (req: Request, res: Response) => {
     try {
-      const product = await ProductServices.createProductDB(req.body);
+      const product = await ProductServices.createProductDB(
+        req.file,
+        req.body
+        );
+      console.log(req.file);
+      console.log(req.body);
 
       return res.status(httpStatus.CREATED).json({
         success: true,

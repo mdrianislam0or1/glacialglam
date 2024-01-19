@@ -3,8 +3,17 @@ import { IProduct } from "./product.interface";
 import QueryBuilder from "../../Query/Query";
 import { IReview } from "../review/review.interface";
 import ProductModel from "./product.model";
+import { sendImageToCloudinary } from "../../utils/sendImageInCloudinary";
 
-const createProductDB = async (productData: IProduct): Promise<IProduct> => {
+const createProductDB = async (file:any, productData: IProduct): Promise<IProduct> => {
+  const imageName = `${productData._id}${productData?.name}`;
+  const path = file?.path;
+  const { secure_url } = (await sendImageToCloudinary(
+    imageName,
+    path,
+  )) as any;
+  productData.image = secure_url;
+
   const createProduct = await ProductModel.create({
     ...productData,
     createdAt: new Date(),

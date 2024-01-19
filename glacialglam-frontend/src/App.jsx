@@ -16,6 +16,7 @@ import Cart from "./pages/Order/Cart";
 import ProcessOrder from "./pages/Order/ProcessOrder";
 import MyOrderProfile from "./pages/Customer/MyOrderProfile";
 import MyOrder from "./pages/Order/MyOrder";
+import GetAllOrder from "./pages/Admin/GetAllOrder";
 
 const App = () => {
   const authChecked = useAuthCheck();
@@ -31,7 +32,11 @@ const App = () => {
         <Route path="/profile" element={<MyOrderProfile />} />
         <Route path="/orders/myOrder/:orderId" element={<MyOrder />} />
         <Route path="/products/:productId/reviews" element={<ProductDetails />} />
+        {/* admin */}
+        
         <Route path="/admin/create-product" element={<CreateProduct />} />
+        <Route path="/admin/all-order" element={<GetAllOrder />} />
+        
         <Route path="/admin/update-products/:productId" element={<UpdateProduct />} />
 
 

@@ -9,17 +9,16 @@ export const orderApi = apiSlice.injectEndpoints({
         method: "POST",
         body: orderData,
         headers: {
-          'Authorization': `${JSON.parse(localStorage.getItem("auth"))?.token}`,
-          'Content-Type': 'application/json',
+          Authorization: `${JSON.parse(localStorage.getItem("auth"))?.token}`,
+          "Content-Type": "application/json",
         },
       }),
     }),
-
     getMyAllOrder: builder.query({
       query: () => `/orders/myOrder`,
       headers: {
-        'Authorization': `${JSON.parse(localStorage.getItem("auth"))?.token}`,
-        'Content-Type': 'application/json',
+        Authorization: `${JSON.parse(localStorage.getItem("auth"))?.token}`,
+        "Content-Type": "application/json",
       },
       keepUnusedDataFor: 600,
       providesTags: ["Order"],
@@ -27,8 +26,19 @@ export const orderApi = apiSlice.injectEndpoints({
     getOrderById: builder.query({
       query: (orderId) => `/orders/myOrder/${orderId}`, // Update this line
       headers: {
-        'Authorization': `${JSON.parse(localStorage.getItem("auth"))?.token}`,
-        'Content-Type': 'application/json',
+        Authorization: `${JSON.parse(localStorage.getItem("auth"))?.token}`,
+        "Content-Type": "application/json",
+      },
+      keepUnusedDataFor: 600,
+      providesTags: ["Order"],
+    }),
+
+    //admin
+    getAllOrderByAdmin: builder.query({
+      query: () => `/orders/admin/allOrder`,
+      headers: {
+        Authorization: `${JSON.parse(localStorage.getItem("auth"))?.token}`,
+        "Content-Type": "application/json",
       },
       keepUnusedDataFor: 600,
       providesTags: ["Order"],
@@ -40,4 +50,7 @@ export const {
   useAddOrderItemsMutation,
   useGetMyAllOrderQuery,
   useGetOrderByIdQuery,
+
+  //admin
+  useGetAllOrderByAdminQuery,
 } = orderApi;

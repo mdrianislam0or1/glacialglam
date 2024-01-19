@@ -1,7 +1,7 @@
 import { v2 as cloudinary } from 'cloudinary';
-import config from '../config';
 import multer from 'multer';
 import fs from 'fs';
+import config from '../config';
 
 cloudinary.config({
   cloud_name: config.cloud_name,

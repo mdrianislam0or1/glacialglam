@@ -11,14 +11,13 @@ export const productApi = apiSlice.injectEndpoints({
       providesTags:(result, error, productId)=>[{type:"product", productId}]
     }),
     createProduct: builder.mutation({
-      query: (data) => ({
-        url: `/product`,
+      query: (formData) => ({
+        url: "/product",
         method: "POST",
-        body:data,
-        headers: { 'Authorization': `${JSON.parse(localStorage.getItem("auth"))?.token}`},
+        body: formData,
+        headers: { 'Authorization': `${JSON.parse(localStorage.getItem("auth"))?.token}` },
       }),
-      invalidatesTags:["Product"]
-
+      invalidatesTags: ["Product"],
     }),
     updateProduct: builder.mutation({
       query: ({ productId, ...data }) => ({
