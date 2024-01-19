@@ -9,6 +9,11 @@ export interface TUser {
   role: "user" | "admin";
   createdAt?: string;
   updatedAt?: string;
+  // extra
+  phone?: Number;
+  image?: string;
+  address?: string;
+  about?: string;
   passwordChangeHistory?: {
     password: string;
     timestamp: string;

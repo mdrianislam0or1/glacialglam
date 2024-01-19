@@ -12,13 +12,24 @@ import sendResponse from "../../utils/sendResponse";
 
 const UserController = catchAsync(async (req, res) => {
   try {
-    const userData: TUser = req.body;
-    const user = await UserServices.createUserIntoDB(userData);
+   
+    const user = await UserServices.createUserIntoDB(
+      req.file,
+      req.body
+      );
+    console.log(req.file);
+    console.log(req.body);
 
     const responseData = {
       _id: user._id,
       username: user.username,
       email: user.email,
+      //extra
+      phone: user.phone,
+      image: user.image,
+      address: user.address,
+      about: user.about,
+
       role: user.role,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
@@ -39,6 +50,143 @@ const UserController = catchAsync(async (req, res) => {
   }
 });
 
+
+//my profile
+
+const getMyProfileController = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user?._id;
+
+  if (!userId) {
+    return sendResponse(res, {
+      success: false,
+      statusCode: 401,
+      message: 'Unauthorized. User not found.',
+    });
+  }
+
+  try {
+    const userProfile = await UserServices.getMyProfile(userId);
+
+    if (!userProfile) {
+      return sendResponse(res, {
+        success: false,
+        statusCode: 404,
+        message: 'User profile not found.',
+      });
+    }
+
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      data: userProfile,
+      message: 'User profile retrieved successfully.',
+    });
+  } catch (error:any) {
+    console.error('Error getting user profile:', error.message);
+    res.status(500).json({ error: 'Failed to retrieve user profile.' });
+  }
+});
+
+
+// admin get all users
+
+const getAllUsersController = catchAsync(async (req: Request, res: Response) => {
+  try {
+    const allUsers = await UserServices.getAllUsers();
+
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      data: allUsers,
+      message: 'All users retrieved successfully.',
+    });
+  } catch (error :any) {
+    console.error('Error getting all users:', error.message);
+    res.status(500).json({ error: 'Failed to retrieve all users.' });
+  }
+});
+
+const getUserByIdController = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params.userId;
+
+  try {
+    const user = await UserServices.getUserById(userId);
+
+    if (!user) {
+      return sendResponse(res, {
+        success: false,
+        statusCode: 404,
+        message: 'User not found.',
+      });
+    }
+
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      data: user,
+      message: 'User details retrieved successfully.',
+    });
+  } catch (error :any) {
+    console.error('Error getting user details:', error.message);
+    res.status(500).json({ error: 'Failed to retrieve user details.' });
+  }
+});
+
+
+
+const deleteUserByIdController = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params.userId;
+
+  try {
+    await UserServices.deleteUserById(userId);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: 'User deleted successfully.',
+    });
+  } catch (error :any) {
+    console.error('Error deleting user:', error.message);
+    res.status(500).json({ error: 'Failed to delete user.' });
+  }
+});
+
+
+// admin end
+
+
+//update user common
+
+const updateProfileController = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params.userId;
+  const updatedProfile = req.body;
+
+  try {
+    const updatedUser = await UserServices.updateUserProfile(userId, updatedProfile);
+
+    if (!updatedUser) {
+      sendResponse(res, {
+        success: false,
+        statusCode: 404,
+        message: 'User not found.',
+      });
+    } else {
+      sendResponse(res, {
+        success: true,
+        statusCode: 200,
+        message: 'User profile updated successfully.',
+        data: updatedUser,
+      });
+    }
+  } catch (error :any) {
+    console.error('Error updating user profile:', error.message);
+    res.status(500).json({ error: 'Failed to update user profile.' });
+  }
+});
+
+
+
+// login
 const userLoginController = catchAsync(async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -155,4 +303,12 @@ export const UserControllers = {
   UserController,
   userLoginController,
   changePasswordController,
+
+  getMyProfileController,
+  updateProfileController,
+
+  //admin
+  getAllUsersController,
+  getUserByIdController,
+  deleteUserByIdController,
 };

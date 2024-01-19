@@ -32,6 +32,25 @@ const userSchema = new Schema<TUser, UserModel>({
     default: Date.now,
   },
 
+  // extra
+  phone: {
+    type: Number,
+    default: null,
+  },
+  image: {
+    type: String,
+    default: null,
+  },
+  address: {
+    type: String,
+    default: null,
+  },
+  about: {
+    type: String,
+    default: null,
+  },
+  
+
   passwordChangeHistory: [
     {
       password: {

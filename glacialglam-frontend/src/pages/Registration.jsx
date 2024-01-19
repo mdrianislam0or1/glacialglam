@@ -10,12 +10,26 @@ export default function Register() {
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-    const [role,setRole] = useState("user");
-
+  const [phone,setPhone] = useState("0123456789");
+  const [address,setAddress] = useState("123 Street");
+  const [image,setImage] = useState("");
+  const [about,setAbout] = useState("I am a user");
+  const [role,setRole] = useState("user");
   const [register, { data, isLoading, isError, isSuccess}] =
     useRegisterMutation();
 
   const navigate = useNavigate();
+
+  const resetForm = () => {
+    setUserName("");
+    setEmail("");
+    setPassword("");
+    setPhone("");
+    setAddress("");
+    setImage("");
+    setAbout("");
+    setRole("user");
+  };
 
   useEffect(() => {
     if  (isSuccess) {
@@ -23,18 +37,36 @@ export default function Register() {
       }
   }, [data, navigate]);
 
-  const onSubmit = (e) => {
+  const onSubmit =  async (e) => {
     e.preventDefault();
     if (password.length < 1) {
       toast.error("Password should be at least 6 characters long");
     } else {
-      const userData = {
-        username,
-        email,
-        password,
-        role,
-      };
-      register(userData);
+      try{
+        const data = new FormData();
+        data.append("file", image);
+        data.append("data", JSON.stringify({
+          username,
+          email,
+          password,
+          phone,
+          address,
+          about,
+          role,
+        }));
+        console.log(data);
+        const response = await register(data);
+    
+        if (response.error) {
+          console.error("Error adding product:", response.error);
+        } else {
+          console.log("New product:", response.data);
+          resetForm();
+        }
+      }
+      catch(error){
+        console.log(error);
+      }
     }
   };
   return (
@@ -79,6 +111,34 @@ export default function Register() {
               placeholder="Password"
               className="input-field my-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
+
+            <TextInput
+              title="Phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+
+            <TextInput
+              title="Address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
+
+            <TextInput
+              title="About"
+              value={about}
+              onChange={(e) => setAbout(e.target.value)}
+            />
+
+            <TextInput
+              title="Image"
+              type="file"
+              onChange={(e) => setImage(e.target.files[0])} // Use e.target.files[0] to get the selected file
+            />
+
+
+            
+
             <select
               name="role"
               value={role}
