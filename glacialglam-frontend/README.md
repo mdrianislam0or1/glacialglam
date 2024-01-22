@@ -1,1 +1,0 @@
-#Glacial Glam Front End
