@@ -4,7 +4,7 @@ import { userLoggedOut } from "../auth/authSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: "http://localhost:5000/api",
-  prepareHeaders: async (headers, { getState, endpoint }) => {
+  prepareHeaders: async (headers, { getState }) => {
     const accessToken = getState()?.auth?.token;
     if (accessToken) {
       headers.set("Authorization", `${accessToken}`);
@@ -25,7 +25,7 @@ export const apiSlice = createApi({
     }
     return result;
   },
-  endpoints: (builder) => ({}),
+  endpoints: () => ({}),
 });
 
 export const { useGetProductsQuery } = apiSlice;

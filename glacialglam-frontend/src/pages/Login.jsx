@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../features/auth/authApi";
 import Error from "../ui/Error";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import Spinner from "../ui/Spinner";
 import Success from "../ui/Success";
 
