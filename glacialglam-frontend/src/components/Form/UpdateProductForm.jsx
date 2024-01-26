@@ -1,4 +1,4 @@
-import React from 'react';
+/* eslint-disable react/prop-types */
 import Success from '../../ui/Success';
 import Error from '../../ui/Error';
 import TextInput from '../../ui/TextInput';
