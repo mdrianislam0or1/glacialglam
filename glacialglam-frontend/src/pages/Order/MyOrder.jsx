@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable no-unused-vars */
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGetOrderByIdQuery } from "../../features/order/orderApi";
 import Spinner from "../../ui/Spinner";

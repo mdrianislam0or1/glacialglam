@@ -1,4 +1,3 @@
-import React from "react";
 import { useGetMyAllOrderQuery } from "../../features/order/orderApi";
 import Spinner from "../../ui/Spinner";
 import Error from "../../ui/Error";

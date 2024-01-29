@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { removeFromCart } from "../../features/order/orderSlice";
-import { toast } from "react-toastify";
 import Spinner from "../../ui/Spinner";
 import Error from "../../ui/Error";
 import Success from "../../ui/Success";
 import { useAddOrderItemsMutation } from "../../features/order/orderApi";
-
+import {toast} from 'sonner'
 const ProcessOrder = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.order.cartItems);
@@ -60,6 +59,9 @@ const ProcessOrder = () => {
       // ...
     } catch (error) {
       console.error("Error placing order:", error);
+      console.error( "real msg",);
+
+      toast.error(`${error?.data?.message}` );
     }
   };
 
@@ -69,7 +71,7 @@ const ProcessOrder = () => {
         Process Your Order
       </h2>
       <form>
-        {isError && toast.error(" Something went wrong") && <Error />}
+        {isError && <Error message="    Invalid request. Missing required properties."/>}
         {isLoading && <Spinner />}
         {isSuccess && <Success message="Order successful" />}
         {/* Shipping Address Fields */}

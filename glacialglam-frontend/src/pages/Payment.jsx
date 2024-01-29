@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import StripeCheckout from 'react-stripe-checkout';
 import axios from 'axios';
 

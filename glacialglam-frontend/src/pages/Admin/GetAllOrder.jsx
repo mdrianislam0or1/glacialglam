@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useGetAllOrderByAdminQuery } from "../../features/order/orderApi";
 import Spinner from "../../ui/Spinner";
 import Error from "../../ui/Error";

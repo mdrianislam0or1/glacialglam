@@ -1,8 +1,6 @@
-import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Registration";
-import Payment from "./pages/Payment";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PublicRoute from "./components/Private/PublicRoute";
@@ -36,8 +34,9 @@ const App = () => {
         
         <Route path="/admin/create-product" element={<CreateProduct />} />
         <Route path="/admin/all-order" element={<GetAllOrder />} />
-        
         <Route path="/admin/update-products/:productId" element={<UpdateProduct />} />
+
+
 
 
         <Route
