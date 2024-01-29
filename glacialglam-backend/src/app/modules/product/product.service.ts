@@ -1,17 +1,17 @@
-import ReviewModel from "../review/review.model";
-import { IProduct } from "./product.interface";
-import QueryBuilder from "../../Query/Query";
-import { IReview } from "../review/review.interface";
-import ProductModel from "./product.model";
-import { sendImageToCloudinary } from "../../utils/sendImageInCloudinary";
+import ReviewModel from '../review/review.model';
+import { IProduct } from './product.interface';
+import QueryBuilder from '../../Query/Query';
+import { IReview } from '../review/review.interface';
+import ProductModel from './product.model';
+import { sendImageToCloudinary } from '../../utils/sendImageInCloudinary';
 
-const createProductDB = async (file:any, productData: IProduct): Promise<IProduct> => {
+const createProductDB = async (
+  file: any,
+  productData: IProduct,
+): Promise<IProduct> => {
   const imageName = `${productData._id}${productData?.name}`;
   const path = file?.path;
-  const { secure_url } = (await sendImageToCloudinary(
-    imageName,
-    path,
-  )) as any;
+  const { secure_url } = (await sendImageToCloudinary(imageName, path)) as any;
   productData.image = secure_url;
 
   const createProduct = await ProductModel.create({
@@ -21,7 +21,6 @@ const createProductDB = async (file:any, productData: IProduct): Promise<IProduc
   });
   return createProduct;
 };
-
 
 const getProductsFromDB = async (query: Record<string, unknown>) => {
   const {
@@ -44,7 +43,7 @@ const getProductsFromDB = async (query: Record<string, unknown>) => {
   }
 
   if (tags !== undefined) {
-    filter["tags.name"] = { $in: Array.isArray(tags) ? tags : [tags] };
+    filter['tags.name'] = { $in: Array.isArray(tags) ? tags : [tags] };
   }
 
   if (manufacturingDate !== undefined && expireDate !== undefined) {
@@ -53,15 +52,15 @@ const getProductsFromDB = async (query: Record<string, unknown>) => {
   }
 
   if (level !== undefined) {
-    filter["details.level"] = level;
+    filter['details.level'] = level;
   }
 
   const productQuery = new QueryBuilder(
     ProductModel.find(filter).populate({
-      path: "createdBy",
-      select: "-password -passwordChangeHistory -createdAt -updatedAt",
+      path: 'createdBy',
+      select: '-password -passwordChangeHistory -createdAt -updatedAt',
     }),
-    query
+    query,
   )
     .sort()
     .paginate()
@@ -77,15 +76,14 @@ const getProductsFromDB = async (query: Record<string, unknown>) => {
   return { data, meta };
 };
 
-
 const updateProductFromDB = async (
   productId: string,
-  update: Partial<IProduct>
+  update: Partial<IProduct>,
 ): Promise<IProduct | undefined> => {
   try {
     const existingProduct = await ProductModel.findById(productId).populate({
-      path: "createdBy",
-      select: "-password -passwordChangeHistory",
+      path: 'createdBy',
+      select: '-password -passwordChangeHistory',
     });
 
     if (!existingProduct) {
@@ -94,14 +92,17 @@ const updateProductFromDB = async (
 
     const ismanufacturingDateUpdated =
       update.manufacturingDate !== undefined &&
-      update.manufacturingDate !== new Date(existingProduct.manufacturingDate).toISOString();
+      update.manufacturingDate !==
+        new Date(existingProduct.manufacturingDate).toISOString();
     const isexpireDateUpdated =
       update.expireDate !== undefined &&
       update.expireDate !== new Date(existingProduct.expireDate).toISOString();
 
     if (ismanufacturingDateUpdated || isexpireDateUpdated) {
       if (ismanufacturingDateUpdated) {
-        existingProduct.manufacturingDate = new Date(update.manufacturingDate!).toISOString();
+        existingProduct.manufacturingDate = new Date(
+          update.manufacturingDate!,
+        ).toISOString();
       }
       if (isexpireDateUpdated) {
         existingProduct.expireDate = new Date(update.expireDate!).toISOString();
@@ -117,8 +118,8 @@ const updateProductFromDB = async (
           !(update.tags ?? []).some(
             (updatedTag) =>
               updatedTag.name === existingTag.name &&
-              updatedTag.isDeleted === true
-          )
+              updatedTag.isDeleted === true,
+          ),
       );
       existingProduct.tags = [
         ...existingProduct.tags,
@@ -144,10 +145,10 @@ const updateProductFromDB = async (
 
     for (const [key, value] of Object.entries(update)) {
       if (
-        key !== "details" &&
-        key !== "manufacturingDate" &&
-        key !== "expireDate" &&
-        key !== "tags"
+        key !== 'details' &&
+        key !== 'manufacturingDate' &&
+        key !== 'expireDate' &&
+        key !== 'tags'
       ) {
         (existingProduct as any)[key] = value;
       }
@@ -156,20 +157,20 @@ const updateProductFromDB = async (
     const updateProduct = await existingProduct.save();
 
     return updateProduct;
-  } catch (error:any) {
+  } catch (error: any) {
     throw error;
   }
 };
 
 const getReviewByProductId = async (
-  productId: string
+  productId: string,
 ): Promise<{ product: IProduct; reviews: IReview[] } | null> => {
   try {
     const product = await ProductModel.findById(productId)
-      .select("-createdAt -updatedAt -__v")
+      .select('-createdAt -updatedAt -__v')
       .populate({
-        path: "createdBy",
-        select: "-password -passwordChangeHistory",
+        path: 'createdBy',
+        select: '-password -passwordChangeHistory',
       });
 
     if (!product) {
@@ -177,10 +178,10 @@ const getReviewByProductId = async (
     }
 
     const reviews = await ReviewModel.find({ productId })
-      .select("-createdAt -updatedAt -__v")
+      .select('-createdAt -updatedAt -__v')
       .populate({
-        path: "createdBy",
-        select: "-password -passwordChangeHistory",
+        path: 'createdBy',
+        select: '-password -passwordChangeHistory',
       });
 
     return { product, reviews };
@@ -188,8 +189,6 @@ const getReviewByProductId = async (
     throw error;
   }
 };
-
-
 
 const getBestProduct = async (): Promise<{
   product: IProduct;
@@ -200,16 +199,16 @@ const getBestProduct = async (): Promise<{
     const bestProduct = await ProductModel.aggregate([
       {
         $lookup: {
-          from: "reviews",
-          localField: "_id",
-          foreignField: "productId",
-          as: "reviews",
+          from: 'reviews',
+          localField: '_id',
+          foreignField: 'productId',
+          as: 'reviews',
         },
       },
       {
         $addFields: {
-          averageRating: { $avg: "$reviews.rating" },
-          reviewCount: { $size: "$reviews" },
+          averageRating: { $avg: '$reviews.rating' },
+          reviewCount: { $size: '$reviews' },
         },
       },
       {
