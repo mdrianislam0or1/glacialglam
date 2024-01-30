@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { userLoggedOut } from "../../features/auth/authSlice";
@@ -82,6 +83,9 @@ export default function Navigation() {
             </li>
             <li>
               <Link to="/admin/create-product">Create Product</Link>
+            </li>
+            <li>
+              <Link to="/admin/delete-product">Delete Product</Link>
             </li>
             
           </ul>

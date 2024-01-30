@@ -1,11 +1,14 @@
 // review.service.ts
-import { IReview } from "./review.interface";
-import ReviewModel from "./review.model";
+import { IReview } from './review.interface';
+import ReviewModel from './review.model';
 
-const createReview = async (reviewData: IReview, userId: string): Promise<IReview> => {
+const createReview = async (
+  reviewData: IReview,
+  userId: string,
+): Promise<IReview> => {
   const newReview = new ReviewModel({
     ...reviewData,
-    createdBy: userId, // Include the user ID in the created review
+    createdBy: userId,
   });
 
   const createdReview = await newReview.save();

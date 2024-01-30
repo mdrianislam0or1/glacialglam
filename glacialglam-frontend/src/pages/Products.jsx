@@ -1,32 +1,49 @@
+/* eslint-disable no-unused-vars */
 // Products.jsx
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useGetProductsQuery } from '../features/product/productApi';
 import { addToCart } from '../features/order/orderSlice';
 import Spinner from '../ui/Spinner';
+import { useState } from 'react';
+import QuantityModal from '../components/Order/QuantityModal';
 
 const Products = () => {
-  const cartItems = useSelector(state => state?.order?.cartItems);
-console.log("Cart Items:", cartItems);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const cartItems = useSelector((state) => state?.order?.cartItems);
+  console.log('Cart Items:', cartItems);
   const { data, isLoading, isError } = useGetProductsQuery();
   const dispatch = useDispatch();
 
-  if (isLoading) return <Spinner/>
+  if (isLoading) return <Spinner />;
   if (isError) return <div>Error loading products</div>;
 
   const allProducts = data?.data?.products || [];
 
-  const handleAddToCart = (product) => {
-    console.log("Adding to cart:", product); // Check if this log appears
-    dispatch(addToCart({
-      name: product.name,
-      qty: 1, // You can allow the user to input the quantity
-      price: product.price,
-      product: product._id,
-      // Add other relevant details from the product
-    }));
+  const openModal = (product) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
   };
-  
+
+  const closeModal = () => {
+    setSelectedProduct(null);
+    setIsModalOpen(false);
+  };
+
+  // const handleAddToCart = (product, quantity) => {
+  //   console.log('Adding to cart:', product, quantity);
+  //   dispatch(
+  //     addToCart({
+  //       name: product.name,
+  //       qty: quantity,
+  //       price: product.price,
+  //       product: product._id,
+  //       // Add other relevant details from the product
+  //     })
+  //   );
+  // };
 
   return (
     <div className="container mx-auto p-4">
@@ -63,7 +80,7 @@ console.log("Cart Items:", cartItems);
               {product.countInStock}
             </p>
             <button
-              onClick={() => handleAddToCart(product)}
+              onClick={() => openModal(product)}
               className="bg-indigo-500 text-white px-4 py-2 rounded mt-4"
             >
               Add to Cart
@@ -83,6 +100,13 @@ console.log("Cart Items:", cartItems);
           </div>
         ))}
       </div>
+
+       {/* Render the QuantityModal */}
+       <QuantityModal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        product={selectedProduct}
+      />
     </div>
   );
 };

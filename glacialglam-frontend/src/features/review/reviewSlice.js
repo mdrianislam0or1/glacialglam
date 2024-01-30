@@ -1,15 +1,14 @@
 /* eslint-disable no-empty-pattern */
 
-// productSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {};
 
-const productSlice = createSlice({
-  name: "product",
+const reviewSlice = createSlice({
+  name: "review",
   initialState,
   reducers: {},
 });
 
-export const {} = productSlice.actions;
-export default productSlice.reducer;
+export const {} = reviewSlice.actions;
+export default reviewSlice.reducer;

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import Success from '../../ui/Success';
 import Error from '../../ui/Error';
@@ -8,11 +9,14 @@ import { useUpdateProductMutation } from '../../features/product/productApi';
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { toast } from "react-toastify";
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 
 const UpdateProductForm = ({ product }) => {
   const { productId } = useParams();
+  const { token, user } = useSelector((state) => state.auth) || {};
 
-  const [data, { isError, isLoading, isSuccess }] = useUpdateProductMutation(JSON.stringify(productId));
+  const [updateProductMutation, { isError, isLoading, isSuccess }] = useUpdateProductMutation(JSON.stringify(productId));
 
   const { createdBy: { _id: initialCreatedBy },
     name: initialName,
@@ -41,13 +45,51 @@ const UpdateProductForm = ({ product }) => {
   const [details, setDetails] = useState(initialDetails);
   const [createdBy, setCreatedBy] = useState(initialCreatedBy);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await data({
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await updateProductMutation({
+  //       productId,
+  //       name,
+  //       image,
+  //       brand,
+  //       categoryId,
+  //       price,
+  //       description,
+  //       tags,
+  //       manufacturingDate,
+  //       expireDate,
+  //       countInStock,
+  //       details,
+  //       createdBy,
+  //     });
+
+  //     if (response.error) {
+  //       console.error("Error updating product:", response.error);
+  //     } else {
+  //       console.log("Product updated:", response.data);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error updating product:", error);
+  //   }
+  // };
+
+
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  try {
+    // Upload image to ImgBB
+    const imgbbResponse = await uploadImageToImgBB(image);
+
+    // Check if the image upload to ImgBB was successful
+    if (imgbbResponse && imgbbResponse.success) {
+      // Use the ImgBB URL in your updateProductMutation
+      const response = await updateProductMutation({
         productId,
         name,
-        image,
+        image: imgbbResponse.data.url, // Use ImgBB URL here
         brand,
         categoryId,
         price,
@@ -64,13 +106,38 @@ const UpdateProductForm = ({ product }) => {
         console.error("Error updating product:", response.error);
       } else {
         console.log("Product updated:", response.data);
-        // You may add additional logic or state changes after a successful update.
       }
-    } catch (error) {
-      console.error("Error updating product:", error);
+    } else {
+      console.error("Error uploading image to ImgBB");
     }
-  };
+  } catch (error) {
+    console.error("Error updating product:", error);
+  }
+};
 
+const uploadImageToImgBB = async (imageFile) => {
+  try {
+    const formData = new FormData();
+    formData.append('image', imageFile);
+
+    const imgbbResponse = await axios.post('https://api.imgbb.com/1/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      params: {
+        key: '1649fb6f862db7406016a17722160f94', // Replace with your ImgBB API key
+      },
+    });
+
+    return imgbbResponse.data;
+  } catch (error) {
+    console.error("Error uploading image to ImgBB:", error);
+    return null;
+  }
+};
+
+
+  
   return (
     <div>
       <form method="POST" onSubmit={handleSubmit}>
@@ -84,13 +151,15 @@ const UpdateProductForm = ({ product }) => {
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
+             
+
               <div className="col-span-6 sm:col-span-3">
-                <TextInput
-                  title="Image"
-                  value={image}
-                  onChange={(e) => setImage(e.target.value)}
-                />
-              </div>
+    <TextInput
+      title="Image"
+      type="file"
+      onChange={(e) => setImage(e.target.files[0])} 
+    />
+  </div>
               <div className="col-span-6 sm:col-span-3">
                 <TextInput
                   title="Brand"
@@ -123,6 +192,7 @@ const UpdateProductForm = ({ product }) => {
                 <TagsInput
                   title="Tags"
                   tags={tags}
+                  value={tags}
                   onChange={(newTags) => setTags(newTags)}
                 />
               </div>

@@ -252,10 +252,42 @@ const getBestProduct = async (): Promise<{
   }
 };
 
+// admin delete
+
+const deleteProductById = async (productId: string) => {
+  try {
+    const product = await ProductModel.findById(productId);
+
+    if (!product) {
+      throw new Error(`Product not found for id: ${productId}`);
+    }
+
+    await ProductModel.deleteOne({ _id: productId });
+
+    return product;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// admin GET all products
+const getAllProducts = async () => {
+  try {
+    const products = await ProductModel.find();
+    return products;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const ProductServices = {
   createProductDB,
   getProductsFromDB,
   updateProductFromDB,
   getReviewByProductId,
   getBestProduct,
+
+  //admin
+  deleteProductById,
+  getAllProducts,
 };

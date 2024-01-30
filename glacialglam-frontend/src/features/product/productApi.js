@@ -5,6 +5,12 @@ export const productApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProducts: builder.query({
       query: () => "/products",
+      providesTags: ["Product"],
+    }),
+    getAdminAllProduct: builder.query({
+      query: () => "/admin/products",
+      providesTags: ["Product"],
+      headers: { 'Authorization': `${JSON.parse(localStorage.getItem("auth"))?.token}` },
     }),
     getProduct: builder.query({
       query: (productId) => `products/${productId}/reviews`,
@@ -43,6 +49,8 @@ export const {
   useCreateProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
+  //admin
+  useGetAdminAllProductQuery
 } = productApi;
 
 

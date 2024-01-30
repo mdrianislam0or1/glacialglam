@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useGetProductQuery } from "../features/product/productApi";
 
 const ProductDetails = () => {
@@ -29,6 +29,14 @@ const ProductDetails = () => {
           <p className="text-gray-800">In Stock: {productWithReview.product.countInStock}</p>
           <p className="text-gray-800">Manufacturing Date: {productWithReview.product.manufacturingDate}</p>
           <p className="text-gray-800">Expire Date: {productWithReview.product.expireDate}</p>
+          <div>
+            What to give rating:
+            <Link to={`/products/review/${productId}`}>
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Review
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -40,6 +48,7 @@ const ProductDetails = () => {
             <p className="text-gray-600">{review.review}</p>
             <p className="text-gray-700 mt-2">By: {review.createdBy.username}</p>
             <p className="text-gray-700">Email: {review.createdBy.email}</p>
+         
           </div>
         ))}
       </div>

@@ -24,7 +24,8 @@ export const orderApi = apiSlice.injectEndpoints({
       providesTags: ["Order"],
     }),
     getOrderById: builder.query({
-      query: (orderId) => `/orders/myOrder/${orderId}`, // Update this line
+      query: (orderId) => `/orders/myOrder/${orderId}`, 
+      invalidatesTags: ["Order"],
       headers: {
         Authorization: `${JSON.parse(localStorage.getItem("auth"))?.token}`,
         "Content-Type": "application/json",

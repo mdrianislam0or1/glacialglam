@@ -14,7 +14,7 @@ export default function Payment() {
     const makeRequest = async () => {
       try {
         const res = await axios.post(
-            'http://localhost:5000/api/orders/payment/:orderId', {
+          'http://localhost:5000/api/orders/payment/:orderId', {
           tokenId: stripeToken.id,
           amount: 1000,
         });

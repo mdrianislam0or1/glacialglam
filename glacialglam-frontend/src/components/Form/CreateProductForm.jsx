@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useCreateProductMutation } from "../../features/product/productApi";
 import TextArea from "../../ui/TextArea";
 import TextInput from "../../ui/TextInput";
@@ -6,10 +6,10 @@ import TagsInput from "../../ui/TagsInput";
 import Success from "../../ui/Success";
 import Error from "../../ui/Error";
 import { useSelector } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
 
 export const CreateProductForm = () => {
   const { token, user } = useSelector((state) => state.auth) || {};
+
   const [createProductMutation, { isError, isLoading, isSuccess }] = useCreateProductMutation();
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
@@ -25,7 +25,7 @@ export const CreateProductForm = () => {
     level: "new",
     description: "",
   });
-  const [createdBy, setCreatedBy] = useState("658d3f761b8f682e52a90ffa");
+  const [createdBy, setCreatedBy] = useState(user?._id);
 
   const resetForm = () => {
     setName("");
@@ -48,7 +48,7 @@ export const CreateProductForm = () => {
     e.preventDefault();
     try {
       const formData = new FormData();
-      formData.append("file", image); // Assuming 'image' is the name of the field for the image
+      formData.append("file", image); 
       formData.append("data", JSON.stringify({
         name,
         brand,
