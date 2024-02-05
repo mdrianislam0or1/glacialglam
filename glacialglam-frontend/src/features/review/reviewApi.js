@@ -1,4 +1,3 @@
-// reviewApi.js
 import { apiSlice } from "../api/apiSlice";
 
 export const reviewApi = apiSlice.injectEndpoints({
