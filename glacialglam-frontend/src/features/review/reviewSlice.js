@@ -1,4 +1,4 @@
-// Hellow
+/* eslint-disable no-empty-pattern */
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {};
