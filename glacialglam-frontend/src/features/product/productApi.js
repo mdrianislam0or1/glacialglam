@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // productApi.js
 import { apiSlice } from "../api/apiSlice";
 
@@ -7,6 +8,43 @@ export const productApi = apiSlice.injectEndpoints({
       query: () => "/products",
       providesTags: ["Product"],
     }),
+    getFilterProducts: builder.query({
+      query: (options) => {
+        const { sortBy, sortOrder, minPrice, maxPrice, tags, manufacturingDate, expireDate, level } = options;
+        let queryString = "/products?";
+        
+        // Append query parameters
+        if (sortBy !== undefined && sortOrder !== undefined) {
+          queryString += `sortBy=${sortBy}&sortOrder=${sortOrder}&`;
+        }
+        if (minPrice !== undefined && maxPrice !== undefined) {
+          queryString += `minPrice=${minPrice}&maxPrice=${maxPrice}&`;
+        }
+        if (tags !== undefined) {
+          if (Array.isArray(tags)) {
+            queryString += `tags=${tags.join(',')}&`;
+          } else {
+            queryString += `tags=${tags}&`;
+          }
+        }
+        if (manufacturingDate !== undefined) {
+          queryString += `manufacturingDate=${manufacturingDate}&`;
+        }
+        if (expireDate !== undefined) {
+          queryString += `expireDate=${expireDate}&`;
+        }
+        if (level !== undefined) {
+          queryString += `level=${level}&`;
+        }
+        
+        // Remove trailing '&' if exists
+        queryString = queryString.replace(/&$/, "");
+        
+        return queryString;
+      },
+      providesTags: ["Product"],
+    }),
+    
     getAdminAllProduct: builder.query({
       query: () => "/admin/products",
       providesTags: ["Product"],
@@ -45,6 +83,7 @@ export const productApi = apiSlice.injectEndpoints({
 
 export const {
   useGetProductsQuery,
+  useGetFilterProductsQuery,
   useGetProductQuery,
   useCreateProductMutation,
   useUpdateProductMutation,
@@ -53,5 +92,4 @@ export const {
   useGetAdminAllProductQuery
 } = productApi;
 
-
-console.log("productApi.js", `${JSON.parse(localStorage.getItem("auth"))?.token}`)
+console.log("productApi.js", `${JSON.parse(localStorage.getItem("auth"))?.token}`);

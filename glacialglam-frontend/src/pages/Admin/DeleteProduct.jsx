@@ -11,24 +11,23 @@ const DeleteProduct = () => {
 
   const handleDelete = async (productId) => {
     try {
-        const res = await axios.delete(
-            `http://localhost:5000/api/products/${productId}`,
-        
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `${
-                      JSON.parse(localStorage.getItem("auth"))?.token
-                    }`,
-                  },
-            }
-        );  
-        console.log(res.data);
-        await refetch();
+      const res = await axios.delete(
+        `http://localhost:5000/api/products/${productId}`,
+
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${JSON.parse(localStorage.getItem("auth"))?.token
+              }`,
+          },
+        }
+      );
+      console.log(res.data);
+      await refetch();
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
-    }
+  }
 
 
   return (
@@ -40,7 +39,7 @@ const DeleteProduct = () => {
             <thead>
               <tr>
                 <th className="px-6 py-3 bg-gray-100 border-b">
-                    Select 
+                  Select
                 </th>
                 <th className="px-6 py-3 bg-gray-100 border-b">Name</th>
                 <th className="px-6 py-3 bg-gray-100 border-b">Description</th>
@@ -50,10 +49,10 @@ const DeleteProduct = () => {
                 <th className="px-6 py-3 bg-gray-100 border-b">Created At</th>
                 <th className="px-6 py-3 bg-gray-100 border-b">Updated At</th>
                 <th className="px-6 py-3 bg-gray-100 border-b">
-                    Details
+                  Details
                 </th>
                 <th className="px-6 py-3 bg-gray-100 border-b">
-                    Action
+                  Action
                 </th>
               </tr>
             </thead>
@@ -61,14 +60,20 @@ const DeleteProduct = () => {
               {/* rows */}
               {adminAllProduct?.map((product) => (
                 <tr key={product._id}>
-                     <th>
-          <label>
-            <input type="checkbox" className="checkbox" />
-          </label>
-        </th>
-                  
+                  <th>
+                    <label>
+                      <input type="checkbox" className="checkbox" />
+                    </label>
+                  </th>
+
                   <td className="px-6 py-4 whitespace-nowrap">{product.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{product.description}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+
+                    {product.description.length > 50 ?
+                      product.description.substring(0, 30) + "..." :
+                      product.description
+                    }
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <img src={product.image} alt={product.name} className="w-12 h-12 object-cover rounded" />
                   </td>
@@ -81,14 +86,14 @@ const DeleteProduct = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <button
-                        onClick={() => handleDelete(product._id)}
-                    className="btn btn-ghost btn-xs">Delete</button>
+                      onClick={() => handleDelete(product._id)}
+                      className="btn btn-ghost btn-xs">Delete</button>
                   </td>
                 </tr>
               ))}
             </tbody>
 
-       
+
           </table>
         </div>
       </div>

@@ -15,6 +15,15 @@ const createReview = async (
   return createdReview;
 };
 
+const getReviewsByProduct = async (productId: string): Promise<IReview[]> => {
+  const reviews = await ReviewModel.find({ productId }).populate(
+    'createdBy',
+    '_id username email role',
+  );
+  return reviews;
+};
+
 export const ReviewServices = {
   createReview,
+  getReviewsByProduct,
 };

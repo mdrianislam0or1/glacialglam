@@ -42,6 +42,9 @@ export default function Navigation() {
           <li>
               <Link to="/login">Login</Link>
             </li>
+          <li>
+              <Link to="/all-products">All Product</Link>
+            </li>
             <li>
               <Link to="/register"> Registration</Link>
             </li>
@@ -98,6 +101,9 @@ export default function Navigation() {
            
           <li>
               <Link to="/login">Login</Link>
+            </li>
+            <li>
+              <Link to="/all-products">All Product</Link>
             </li>
             <li>
               <Link to="/register"> Registration</Link>

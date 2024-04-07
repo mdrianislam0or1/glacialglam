@@ -48,66 +48,63 @@ const Products = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">Product Page</h1>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {allProducts.map((product) => (
-          <div
-            key={product._id}
-            className="bg-white p-6 border border-gray-300 rounded shadow"
-          >
-            <h3 className="text-xl font-bold mb-4">{product.name}</h3>
-            <p className="text-gray-600 mb-4">{product.description}</p>
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-full h-auto mb-4"
-            />
-            <p className="text-gray-700 mb-2">
-              <span className="font-bold">Brand:</span> {product.brand}
-            </p>
-            <p className="text-gray-700 mb-2">
-              <span className="font-bold">Price:</span> ${product.price}
-            </p>
-            <p className="text-gray-700 mb-2">
-              <span className="font-bold">Manufacturing Date:</span>{" "}
-              {product.manufacturingDate}
-            </p>
-            <p className="text-gray-700 mb-2">
-              <span className="font-bold">Expire Date:</span>{" "}
-              {product.expireDate}
-            </p>
-            <p className="text-gray-700 mb-2">
-              <span className="font-bold">Stock Count:</span>{" "}
-              {product.countInStock}
-            </p>
-            <button
-              onClick={() => openModal(product)}
-              className="bg-indigo-500 text-white px-4 py-2 rounded mt-4"
-            >
-              Add to Cart
-            </button>
-            <Link
-              to={`/products/${product._id}/reviews`}
-              className="text-indigo-500 hover:underline block mt-2"
-            >
-              View Reviews
-            </Link>
-            <Link
-              to={`/admin/update-products/${product._id}`}
-              className="text-indigo-500 hover:underline block mt-2"
-            >
-              Update by Admin
-            </Link>
+          <div key={product._id} className="shadow relative">
+            <div
+              style={{ backgroundImage: `url(${product.image})` }}
+              className="bg-cover bg-center bg-no-repeat h-96 m-10"
+            ></div>
+            <div className="p-4 bg-white">
+              <h3 className="text-xl font-bold mb-4">{product.name}</h3>
+              <p className="text-black mb-4">
+
+                {product.description.length > 50 ?
+                  product.description.substring(0, 50) + "..." :
+                  product.description
+                }
+
+              </p>
+              <p className="text-black mb-2">
+                <span className="font-bold">Brand:</span>
+
+                {product.brand}
+              </p>
+              <p className="text-black mb-2">
+                <span className="font-bold">Price:</span> ${product.price}
+              </p>
+              <button
+                onClick={() => openModal(product)}
+                className="bg-indigo-500 text-white px-4 py-2 rounded mt-4"
+              >
+                Add to Cart
+              </button>
+              <Link
+                to={`/products/${product._id}/reviews`}
+                className="text-indigo-500 hover:underline block mt-2"
+              >
+                View Reviews
+              </Link>
+              <Link
+                to={`/admin/update-products/${product._id}`}
+                className="text-indigo-500 hover:underline block mt-2"
+              >
+                Update by Admin
+              </Link>
+            </div>
           </div>
         ))}
       </div>
 
-       {/* Render the QuantityModal */}
-       <QuantityModal
+      {/* Render the QuantityModal */}
+      <QuantityModal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
         product={selectedProduct}
       />
     </div>
+
   );
 };
 

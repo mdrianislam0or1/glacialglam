@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
-import { IReview } from "./review.interface";
-import { ReviewServices } from "./review.service";
-import sendResponse from "../../utils/sendResponse";
+import { Request, Response } from 'express';
+import { IReview } from './review.interface';
+import { ReviewServices } from './review.service';
+import sendResponse from '../../utils/sendResponse';
 
 const createReviewController = async (req: Request, res: Response) => {
   try {
@@ -20,7 +20,7 @@ const createReviewController = async (req: Request, res: Response) => {
     const response = {
       statusCode: 201,
       success: true,
-      message: "Review created successfully",
+      message: 'Review created successfully',
       data: {
         _id: createdReview._id,
         productId: createdReview.productId,
@@ -42,7 +42,34 @@ const createReviewController = async (req: Request, res: Response) => {
     const response = {
       statusCode: 500,
       success: false,
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
+      errorMessage: error.message,
+      errorDetails: error.errorDetails,
+      stack: error.stack,
+    };
+
+    sendResponse(res, response);
+  }
+};
+
+const getReviewsByProductController = async (req: Request, res: Response) => {
+  try {
+    const productId = req.params.productId;
+    const reviews = await ReviewServices.getReviewsByProduct(productId);
+
+    const response = {
+      statusCode: 200,
+      success: true,
+      message: 'Reviews retrieved successfully',
+      data: reviews,
+    };
+
+    sendResponse(res, response);
+  } catch (error: any) {
+    const response = {
+      statusCode: 500,
+      success: false,
+      message: 'Internal Server Error',
       errorMessage: error.message,
       errorDetails: error.errorDetails,
       stack: error.stack,
@@ -54,4 +81,5 @@ const createReviewController = async (req: Request, res: Response) => {
 
 export const ReviewControllers = {
   createReviewController,
+  getReviewsByProductController,
 };

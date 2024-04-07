@@ -1,15 +1,18 @@
 import { Link, useParams } from "react-router-dom";
 import { useGetProductQuery } from "../features/product/productApi";
+import { useGetReviewQuery } from "../features/review/reviewApi"; // Import useGetReviewQuery hook
 
 const ProductDetails = () => {
   const { productId } = useParams();
-  const { data, isLoading, isError } = useGetProductQuery(productId);
+  const { data: productData, isLoading: productLoading, isError: productError } = useGetProductQuery(productId);
+  const { data: reviewData, isLoading: reviewLoading, isError: reviewError } = useGetReviewQuery(productId); // Fetch reviews for the product
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading product details</div>;
+  if (productLoading || reviewLoading) return <div>Loading...</div>;
+  if (productError) return <div>Error loading product details</div>;
+  if (reviewError) return <div>Error loading reviews</div>;
 
-  const productWithReview = data?.data;
-  console.log(JSON.parse(localStorage.getItem("auth"))?.token);
+  const productWithReview = productData?.data;
+
   return (
     <div className="container mx-auto p-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -42,13 +45,12 @@ const ProductDetails = () => {
 
       <div className="mt-8">
         <h3 className="text-xl font-bold mb-4">Reviews</h3>
-        {productWithReview.reviews.map((review) => (
-          <div key={review._id} className="border-b border-gray-300 py-4">
-            <p className="text-gray-800 font-semibold">Rating: {review.rating}</p>
-            <p className="text-gray-600">{review.review}</p>
-            <p className="text-gray-700 mt-2">By: {review.createdBy.username}</p>
-            <p className="text-gray-700">Email: {review.createdBy.email}</p>
-         
+        {reviewData?.data.map(review => (
+          <div key={review._id} className="border border-gray-200 p-4 mb-4 rounded">
+            <p>Rating: {review.rating}</p>
+            <p>Review: {review.review}</p>
+            <p>Created By: {review.createdBy.username}</p>
+            <p>Created At: {review.createdAt}</p>
           </div>
         ))}
       </div>

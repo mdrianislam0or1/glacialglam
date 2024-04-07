@@ -4,21 +4,38 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import TextArea from "../../ui/TextArea";
+import { useAddReviewMutation } from "../../features/review/reviewApi";
 
 const CreateReview = () => {
   const { token, user } = useSelector((state) => state.auth) || {};
   const { productId } = useParams();
   const [rating, setRating] = useState(3); // Default rating, you can set it to 0 if needed
   const [review, setReview] = useState("");
+  const [addReviewMutation, { isError, isLoading, isSuccess }] = useAddReviewMutation(); // Initialize the mutation hook
 
   const handleRatingChange = (newRating) => {
     setRating(newRating);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Implement your logic to submit the review here
-    console.log("Submitting Review:", { productId, rating, review, userId: user?._id });
+    try {
+      const response = await addReviewMutation({
+        productId,
+        rating,
+        review,
+      });
+      if (response.error) {
+        console.error("Error submitting review:", response.error);
+      } else {
+        console.log("Review submitted:", response.data);
+        // Optionally, you can reset the form or show a success message
+        setRating(3); // Reset the rating to default
+        setReview(""); // Reset the review text
+      }
+    } catch (error) {
+      console.error("Error submitting review:", error);
+    }
   };
 
   return (
@@ -50,9 +67,11 @@ const CreateReview = () => {
             placeholder="Write your review..."
           />
         </div>
-        <button type="submit" color="indigo">
-          Submit Review
+        <button type="submit" disabled={isLoading} className="bg-indigo-500 text-white px-4 py-2 rounded mt-4">
+          {isLoading ? "Submitting..." : "Submit Review"}
         </button>
+        {isSuccess && <div className="text-green-600">Review submitted successfully!</div>}
+        {isError && <div className="text-red-600">Error submitting review. Please try again later.</div>}
       </form>
     </div>
   );
