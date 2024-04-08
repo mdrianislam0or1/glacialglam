@@ -159,7 +159,7 @@ export default function Navigation() {
                 
               
               </span>
-              <span className="text-info">Subtotal: ${cartItems.reduce((total, item) => total + item.price, 0).toFixed(2)}</span>
+              <span className="text-info">Subtotal: ${cartItems.reduce((total, item) => total + item.price * item.qty, 0).toFixed(2)}</span>
               <div className="card-actions">
                 <button className="btn btn-primary btn-block">
                   <Link to="/cart">View Cart</Link>

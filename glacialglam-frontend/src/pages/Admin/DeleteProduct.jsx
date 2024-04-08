@@ -79,7 +79,10 @@ const DeleteProduct = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">${product.price}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{product.countInStock}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{product.createdAt}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                  {new Date(product.createdAt).toLocaleString()}
+                   
+                    </td>
                   <td className="px-6 py-4 whitespace-nowrap">{product.updatedAt}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <button className="btn btn-ghost btn-xs">Details</button>

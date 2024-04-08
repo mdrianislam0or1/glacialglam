@@ -39,7 +39,9 @@ const CreateReview = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-4 bg-white rounded-md shadow-md">
+  
+    <div className=" container px-10 mx-auto min-h-screen">
+        <div className="max-w-md mx-auto mt-10 p-4 bg-white  shadow-md">
       <h2 className="text-2xl font-semibold mb-4">Write a Review</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -67,12 +69,15 @@ const CreateReview = () => {
             placeholder="Write your review..."
           />
         </div>
-        <button type="submit" disabled={isLoading} className="bg-indigo-500 text-white px-4 py-2 rounded mt-4">
+        <button type="submit" disabled={isLoading} className="
+         w-full bg-black text-white py-2 px-4 mt-4 hover:bg-black
+        ">
           {isLoading ? "Submitting..." : "Submit Review"}
         </button>
         {isSuccess && <div className="text-green-600">Review submitted successfully!</div>}
         {isError && <div className="text-red-600">Error submitting review. Please try again later.</div>}
       </form>
+    </div>
     </div>
   );
 };

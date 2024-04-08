@@ -72,8 +72,8 @@ const Products = () => {
            <div className='flex justify-between align-middle py-4'>
              <div>
                <div className="font-semibold  text-sm">{product.name}</div>
-               <div className="text-gray-700 text-sm">Brand: {product.brand}</div>
-               <div className="text-gray-700 text-sm">Price: ${product.price}</div>
+               <div className="text-black text-sm">Brand: {product.brand}</div>
+               <div className="text-black text-sm">Price: ${product.price}</div>
 
                <Link
                to={`/products/${product._id}/reviews`}

@@ -1,8 +1,15 @@
 import { Link, useParams } from "react-router-dom";
 import { useGetProductQuery } from "../features/product/productApi";
 import { useGetReviewQuery } from "../features/review/reviewApi"; // Import useGetReviewQuery hook
+import QuantityModal from "../components/Order/QuantityModal";
+import { useState } from "react";
 
 const ProductDetails = () => {
+
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [rating, setRating] = useState(0); // Initialize rating state with default value
+
   const { productId } = useParams();
   const { data: productData, isLoading: productLoading, isError: productError } = useGetProductQuery(productId);
   const { data: reviewData, isLoading: reviewLoading, isError: reviewError } = useGetReviewQuery(productId); // Fetch reviews for the product
@@ -12,6 +19,20 @@ const ProductDetails = () => {
   if (reviewError) return <div>Error loading reviews</div>;
 
   const productWithReview = productData?.data;
+
+  const openModal = (product) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedProduct(null);
+    setIsModalOpen(false);
+  };
+
+  const handleRatingChange = (newRating) => {
+    setRating(newRating);
+  };
 
   return (
     <div className="container mx-auto p-8  min-h-screen">
@@ -23,22 +44,54 @@ const ProductDetails = () => {
             className="w-full h-auto rounded-md"
           />
         </div>
-        <div>
-          <h2 className="text-2xl font-bold mb-4">{productWithReview.product.name}</h2>
-          <p className="text-gray-600 mb-4">{productWithReview.product.description}</p>
-          <p className="text-gray-800 font-semibold">Price: ${productWithReview.product.price}</p>
-          <p className="text-gray-800">Brand: {productWithReview.product.brand}</p>
-          <p className="text-gray-800">Category: {productWithReview.product.categoryId}</p>
-          <p className="text-gray-800">In Stock: {productWithReview.product.countInStock}</p>
-          <p className="text-gray-800">Manufacturing Date: {productWithReview.product.manufacturingDate}</p>
-          <p className="text-gray-800">Expire Date: {productWithReview.product.expireDate}</p>
+        <div className="p-3 my-10">
+          <div className="flex justify-between align-middle">
+            <div className="py-2">
+              <h2 className="text-2xl font-bold mb-4">{productWithReview.product.name}</h2>
+            </div>
+
+            <div className="py-2">
+              <p className="text-black font-semibold">Price: ${productWithReview.product.price}</p>
+            </div>
+          </div>
+          <div className="flex justify-between align-middle">
+            <div className="py-2">
+              <p className="text-black">Brand: {productWithReview.product.brand}</p>
+            </div>
+
+            <div className="py-2">
+              <p className="text-black">Level: {productWithReview.product.details?.level}</p>
+            </div>
+          </div>
+
+          <div className="flex justify-between align-middle">
+            <div className="py-2">
+              <p className="text-black">Expire Date: {productWithReview.product.expireDate}</p>
+            </div>
+
+            <div className="py-2">
+              <p className="text-black">In Stock: {productWithReview.product.countInStock}</p>
+            </div>
+          </div>
+         <div className="py-4">
+         <p className="text-black text-xl mb-4">{productWithReview.product.description}</p>
+         </div>
+
+
           <div>
-            What to give rating:
+           
             <Link to={`/products/review/${productId}`}>
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              <button   className=" w-full bg-black text-white py-2 px-4 mt-4 hover:bg-black">
                 Review
               </button>
             </Link>
+
+            <button
+            className=" w-full border  py-2 px-4 mt-4 border-black"
+               onClick={() => openModal( productWithReview.product)}
+             >
+               Add to Cart
+             </button>
           </div>
         </div>
       </div>
@@ -46,14 +99,33 @@ const ProductDetails = () => {
       <div className="mt-8">
         <h3 className="text-xl font-bold mb-4">Reviews</h3>
         {reviewData?.data.map(review => (
-          <div key={review._id} className="border border-gray-200 p-4 mb-4 rounded">
-            <p>Rating: {review.rating}</p>
-            <p>Review: {review.review}</p>
-            <p>Created By: {review.createdBy.username}</p>
-            <p>Created At: {review.createdAt}</p>
-          </div>
+       <div key={review._id} className="grid grid-cols-3 gap-4">
+       <div className="border border-black p-4 mb-4 rounded">
+         <div className="rating">
+           {[1, 2, 3, 4, 5].map((star) => (
+             <input
+               key={star}
+               type="radio"
+               name="rating"
+               className={`mask mask-star-2 bg-orange-400 ${star <= rating ? "checked" : ""}`}
+               onChange={() => handleRatingChange(star)}
+             />
+           ))}
+         </div>
+         <p>Review: {review.review}</p>
+         <p>Author: {review.createdBy.username}</p>
+         
+         <p>Created At: {new Date(review.createdAt).toLocaleString()}</p>
+       </div>
+     </div>
         ))}
       </div>
+
+      <QuantityModal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        product={selectedProduct}
+      />
     </div>
   );
 };

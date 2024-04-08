@@ -49,7 +49,9 @@ const Cart = () => {
             ))}
             <li className="py-4 flex justify-between items-center">
               <span className="font-bold">Total:</span>
-              <span className="text-xl font-bold">${cartItems.reduce((total, item) => total + item.price, 0).toFixed(2)}</span>
+              <span className="text-xl font-bold">${cartItems.reduce((total, item) => total + item.price * item.qty, 0).toFixed(2)}</span>
+
+             
             </li>
           </ul>
         </div>

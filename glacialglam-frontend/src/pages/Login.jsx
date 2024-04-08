@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../features/auth/authApi";
 import Error from "../ui/Error";
 import { toast } from "react-toastify";
 import Spinner from "../ui/Spinner";
 import Success from "../ui/Success";
+import CommonInput from "../ui/CommonInput";
 
 
 const Login = () => {
@@ -47,41 +48,42 @@ const Login = () => {
 
   return (
     <div>
-      <div className="grid place-items-center h-screen bg-[#F9FAFB">
-        <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 bg-lime-300 gap-8 border border-black rounded-md m-8">
+        <div className="">
+          <img
+            className=" w-full h-screen object-cover"
+            src="https://images.unsplash.com/photo-1601598851547-4302969d0614?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt=""
+          />
+        </div>
+        <div className=" flex items-center justify-center px-4 py-4">
           <div className="max-w-md w-full space-y-8">
             <div>
-              <Link to="/">
-                <img
-                  className="mx-auto h-12 w-auto"
-                  src=""
-                  alt="Glacial Glam Logo"
-                />
-              </Link>
-              <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+             
+              <h2 className="mt-6 text-center text-xl uppercase text-black">
                 Sign in to your account
               </h2>
             </div>
 
-            <form onSubmit={onSubmit} className="mt-6">
-              <input
+            <form onSubmit={onSubmit} className="">
+              <CommonInput
                 type="text"
                 name="username"
                 value={username}
                 onChange={(e)=>setUserName(e.target.value)}
                 placeholder="Username"
-                className="input-field my-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+               
               />
-              <input
+              <CommonInput
                 type="password"
                 name="password"
                 value={password}
                 onChange={(e)=>setPassword(e.target.value)}
                 placeholder="Password"
-                className="input-field my-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+               
               />
               <div className="text-center">
-                <button className="btn btn-active btn-neutral" type="submit">
+                <button className=" w-full bg-black text-white py-2 px-4 mt-4 hover:bg-black" type="submit">
                   Login
                 </button>
               </div>

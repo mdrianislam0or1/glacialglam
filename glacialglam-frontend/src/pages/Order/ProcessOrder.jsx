@@ -203,11 +203,7 @@ const ProcessOrder = () => {
               {/* Total Price */}
               <div className="flex items-center justify-between mt-4">
                 <span className="font-bold text-xl text-black">Total:</span>
-                <span className="text-xl font-bold text-blue-500">
-                  ${cartItems
-                    .reduce((total, item) => total + item.price, 0)
-                    .toFixed(2)}
-                </span>
+                <span className="text-xl font-bold">${cartItems.reduce((total, item) => total + item.price * item.qty, 0).toFixed(2)}</span>
               </div>
 
               {/* Place Order Button */}
