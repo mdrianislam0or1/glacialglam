@@ -82,7 +82,7 @@ export const CreateProductForm = () => {
   
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto  min-h-screen">
       <form method="POST" onSubmit={handleSubmit}>
         <div className="shadow overflow-hidden sm:rounded-md">
           <div className="px-4 py-5 sm:p-6">

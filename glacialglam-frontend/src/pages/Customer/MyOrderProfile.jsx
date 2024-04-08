@@ -17,7 +17,7 @@ const MyOrderProfile = () => {
 
   if (isSuccess) {
     return (
-      <div className="container mx-auto mt-8">
+      <div className="container mx-auto mt-8  min-h-screen">
         <h2 className="text-2xl font-bold mb-4">My Orders</h2>
         {allOrder.map((order) => (
           <Link key={order._id}  to={`/orders/myOrder/${order._id}`}>

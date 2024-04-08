@@ -1,20 +1,42 @@
+import { Link } from "react-router-dom"
+import CommonButton from "../../ui/Button"
 
 const Footer = () => {
   return (
-    <div className="bg-cover bg-center bg-no-repeat 
-    bg-red-900 bg-opacity-50"
-    style={{ backgroundImage: "url('https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')", height: "70vh"}}
-    >
-        
-        <div className="px-6 text-start grid grid-cols-4 gap-4 place-content-end h-96 ">
-            <div className="">
-            <h1 className=" text-4xl text-white uppercase">the store about us</h1>
-            <p className="text-sm text-white">
-            Rooted in our passion for style and warmth, we at FrostFootwear aim to redefine the cold-weather experience by offering a curated collection of shoes, jackets, jeans, and coats that blend fashion with functionality, ensuring you step out with confidence and comfort in every chilly adventure.
-            </p>
-            </div>
-        </div>
-    </div>
+    <footer className="footer p-10 bg-base-200 text-base-content">
+  <nav>
+    <h6 className="footer-title">Services</h6> 
+    <Link to="/" className="link link-hover">Branding</Link>
+    <Link to="/" className="link link-hover">Design</Link>
+    <Link to="/" className="link link-hover">Marketing</Link>
+    <Link to="/" className="link link-hover">Advertisement</Link>
+  </nav> 
+  <nav>
+    <h6 className="footer-title">Company</h6> 
+    <Link to="/" className="link link-hover">About us</Link>
+    <Link to="/" className="link link-hover">Contact</Link>
+    <Link to="/" className="link link-hover">Jobs</Link>
+    <Link to="/" className="link link-hover">Press kit</Link>
+  </nav> 
+  <nav>
+    <h6 className="footer-title">Legal</h6> 
+    <Link to="/" className="link link-hover">Terms of use</Link>
+    <Link to="/" className="link link-hover">Privacy policy</Link>
+    <Link to="/" className="link link-hover">Cookie policy</Link>
+  </nav> 
+  <form>
+    <h6 className="footer-title">Newsletter</h6> 
+    <fieldset className="form-control w-80">
+      <label className="label">
+        <span className="label-text">Enter your email address</span>
+      </label> 
+      <div className="join">
+        <input type="text" placeholder="username@site.com" className="input input-bordered join-item" /> 
+        <CommonButton className=" join-item">Subscribe</CommonButton>
+      </div>
+    </fieldset>
+  </form>
+</footer>
   )
 }
 

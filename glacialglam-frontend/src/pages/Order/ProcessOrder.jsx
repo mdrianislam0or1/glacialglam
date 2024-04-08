@@ -5,10 +5,13 @@ import Spinner from "../../ui/Spinner";
 import Error from "../../ui/Error";
 import Success from "../../ui/Success";
 import { useAddOrderItemsMutation } from "../../features/order/orderApi";
-import {toast} from 'sonner'
+import { toast } from 'sonner'
+import CommonInput from "../../ui/CommonInput";
+import { Link } from "react-router-dom";
 const ProcessOrder = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.order.cartItems);
+  console.log("Cart Items:", cartItems);
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [postalCode, setPostalCode] = useState("");
@@ -59,132 +62,167 @@ const ProcessOrder = () => {
       // ...
     } catch (error) {
       console.error("Error placing order:", error);
-      console.error( "real msg",);
+      console.error("real msg",);
 
-      toast.error(`${error?.data?.message}` );
+      toast.error(`${error?.data?.message}`);
     }
   };
 
   return (
-    <div className="container mx-auto mt-8 p-4 bg-white shadow-lg rounded-md">
-      <h2 className="text-3xl font-bold mb-6 text-center text-blue-500">
-        Process Your Order
+    <div className="container mx-auto mt-8 p-4 min-h-screen">
+      <h2 className="text-6xl font-bold uppercase mb-6 text-center ">
+        CHEckout Process
       </h2>
+      <p className="text-sm text-center  font-bold mb-2 py-2">
+       Are you allready have an account? 
+       <Link to="/login" className=" underline px-1">
+       Please login
+       </Link>
+      </p>
       <form>
-        {isError && <Error message="    Invalid request. Missing required properties."/>}
+        {isError && <Error message="    Invalid request. Missing required properties." />}
         {isLoading && <Spinner />}
         {isSuccess && <Success message="Order successful" />}
         {/* Shipping Address Fields */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-600">
-            Address:
-          </label>
-          <input
-            type="text"
-            className="mt-1 p-3 border rounded w-full focus:outline-none focus:ring focus:border-blue-300"
-            placeholder="Enter your address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-600">
-            City:
-          </label>
-          <input
-            type="text"
-            className="mt-1 p-3 border rounded w-full focus:outline-none focus:ring focus:border-blue-300"
-            placeholder="Enter your city"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-600">
-            Postal Code:
-          </label>
-          <input
-            type="text"
-            className="mt-1 p-3 border rounded w-full focus:outline-none focus:ring focus:border-blue-300"
-            placeholder="Enter your postal code"
-            value={postalCode}
-            onChange={(e) => setPostalCode(e.target.value)}
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-600">
-            Country:
-          </label>
-          <input
-            type="text"
-            className="mt-1 p-3 border rounded w-full focus:outline-none focus:ring focus:border-blue-300"
-            placeholder="Enter your country"
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-          />
-        </div>
-
-        {/* Payment Method Field */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-600">
-            Payment Method:
-          </label>
-          <input
-            type="text"
-            className="mt-1 p-3 border rounded w-full focus:outline-none focus:ring focus:border-blue-300"
-            placeholder="Enter your payment method"
-            value={paymentMethod}
-            onChange={(e) => setPaymentMethod(e.target.value)}
-          />
-        </div>
-
-        {/* Order Items */}
-        <h3 className="text-xl font-bold mb-2 text-gray-800">Order Items</h3>
-        <ul className="list-disc pl-4">
-          {cartItems.map((item) => (
-            <li
-              key={item.product}
-              className="mb-2 border-b pb-2 flex justify-between items-center"
-            >
+        <div className=" grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+          <div>
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <span className="text-lg text-gray-700">
-                  {item.name} - Quantity: {item.qty}
-                </span>
-                <span className="block text-sm text-gray-500">
-                  ${item.price.toFixed(2)}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-600">
+                    Address:
+                  </label>
+                  <CommonInput
+                    type="text"
+
+                    placeholder="Enter your address"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-600">
+                    City:
+                  </label>
+                  <CommonInput
+                    type="text"
+                    className="mt-1 p-3 border rounded w-full focus:outline-none focus:ring focus:border-blue-300"
+                    placeholder="Enter your city"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div>
+                <div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-600">
+                      Postal Code:
+                    </label>
+                    <CommonInput
+                      type="text"
+                      className="mt-1 p-3 border rounded w-full focus:outline-none focus:ring focus:border-blue-300"
+                      placeholder="Enter your postal code"
+                      value={postalCode}
+                      onChange={(e) => setPostalCode(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-600">
+                      Country:
+                    </label>
+                    <CommonInput
+                      type="text"
+                      className="mt-1 p-3 border rounded w-full focus:outline-none focus:ring focus:border-blue-300"
+                      placeholder="Enter your country"
+                      value={country}
+                      onChange={(e) => setCountry(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+            {/* Payment Method Field */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-600">
+                Payment Method:
+              </label>
+              <CommonInput
+                type="text"
+                className="mt-1 p-3 border rounded w-full focus:outline-none focus:ring focus:border-blue-300"
+                placeholder="Enter your payment method"
+                value={paymentMethod}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div>
+            <div>
+              {/* Order Items */}
+              <h3 className="text-xl uppercase font-bold mb-2 text-gray-800">
+                Your Basket
+              </h3>
+              <ul className="list-disc pl-4">
+                {cartItems.map((item) => (
+                  <li
+                    key={item.product}
+                    className="mb-2 border-b pb-2 flex justify-between items-center"
+                  >
+                    <div className=" grid grid-cols-2 gap-10">
+                      <div className="">
+                        <img  className="bg-lime-100 object-contain h-20 w-20" src={item.image} alt="" />
+                      </div>
+                     <div>
+                     <div className="text-lg text-black">
+                        Name: {item.name} 
+                      </div>
+                     <div className="text-lg text-black">
+                         Quantity: {item.qty}
+                      </div>
+                      <div className="block text-sm text-black">
+                         Price: ${item.price.toFixed(2)}
+                      </div>
+                     </div>
+                    </div>
+                    <button
+                      onClick={() => handleRemoveFromCart(item.product)}
+                      className="bg-lime-300  px-3 py-1 border-none"
+                    >
+                      Remove
+                    </button>
+                  </li>
+                ))}
+              </ul>
+
+              {/* Total Price */}
+              <div className="flex items-center justify-between mt-4">
+                <span className="font-bold text-xl text-black">Total:</span>
+                <span className="text-xl font-bold text-blue-500">
+                  ${cartItems
+                    .reduce((total, item) => total + item.price, 0)
+                    .toFixed(2)}
                 </span>
               </div>
-              <button
-                onClick={() => handleRemoveFromCart(item.product)}
-                className="bg-red-500 text-white px-3 py-1 rounded"
-              >
-                Remove
-              </button>
-            </li>
-          ))}
-        </ul>
 
-        {/* Total Price */}
-        <div className="flex items-center justify-between mt-4">
-          <span className="font-bold text-xl text-gray-800">Total:</span>
-          <span className="text-xl font-bold text-blue-500">
-            ${cartItems
-              .reduce((total, item) => total + item.price, 0)
-              .toFixed(2)}
-          </span>
+              {/* Place Order Button */}
+              <button
+                type="button"
+                onClick={handlePlaceOrder}
+                className=" w-full bg-black text-white py-2 px-4 mt-4 hover:bg-black"
+              >
+                Place Order
+              </button>
+            </div>
+          </div>
         </div>
 
-        {/* Place Order Button */}
-        <button
-          type="button"
-          onClick={handlePlaceOrder}
-          className="bg-blue-500 text-white px-6 py-3 mt-6 rounded-full focus:outline-none hover:bg-blue-600"
-        >
-          Place Order
-        </button>
+
       </form>
     </div>
   );

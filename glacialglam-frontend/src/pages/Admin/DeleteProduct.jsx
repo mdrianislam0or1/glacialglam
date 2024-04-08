@@ -31,8 +31,8 @@ const DeleteProduct = () => {
 
 
   return (
-    <div>
-      <div className="border-b border-gray-300 py-4">
+    <div className=" min-h-screen">
+      <div className="border-b border-gray-300 py-4 ">
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-300">
             {/* head */}

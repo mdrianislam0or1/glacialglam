@@ -91,7 +91,7 @@ const GetAllOrder = () => {
   const orders = data?.data || [];
 
   return (
-    <div className="container mx-auto mt-8">
+    <div className="container mx-auto mt-8  min-h-screen">
       <h2 className="text-2xl font-bold mb-4">All Orders</h2>
 
       {isSuccess && orders.length === 0 && (

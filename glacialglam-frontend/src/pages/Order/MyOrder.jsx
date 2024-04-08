@@ -60,7 +60,7 @@ const MyOrder = () => {
   };
 
   return (
-    <div className="container mx-auto mt-8">
+    <div className="container mx-auto mt-8  min-h-screen">
       <h2 className="text-2xl font-bold mb-4">Order Details</h2>
 
       <StripeCheckout

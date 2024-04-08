@@ -18,6 +18,7 @@ import GetAllOrder from "./pages/Admin/GetAllOrder";
 import DeleteProduct from "./pages/Admin/DeleteProduct";
 import CreateReview from "./pages/Review/CreateReview";
 import AllProduct from "./pages/Product/AllProduct";
+import Footer from "./components/Common/Footer";
 
 const App = () => {
   const authChecked = useAuthCheck();
@@ -71,6 +72,7 @@ const App = () => {
           }
         />
       </Routes>
+      <Footer/>
       <ToastContainer />
     </Router>
   );

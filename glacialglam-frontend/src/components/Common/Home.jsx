@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import Products from "../../pages/Products"
-import Footer from "./Footer"
+import About from "./About"
 
 const Home = () => {
   return (
@@ -50,7 +50,9 @@ const Home = () => {
         </div>
       </div>
 
-      <Footer/>
+      <About/>
+
+     
 
     </div>
   )

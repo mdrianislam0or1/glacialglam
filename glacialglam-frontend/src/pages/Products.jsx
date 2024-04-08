@@ -7,10 +7,18 @@ import { addToCart } from '../features/order/orderSlice';
 import Spinner from '../ui/Spinner';
 import { useState } from 'react';
 import QuantityModal from '../components/Order/QuantityModal';
+import CommonButton from '../ui/Button';
 
 const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+     // Use a more specific selector to access user data
+     const { token, user } = useSelector((state) => state.auth) || {};
+
+     // Check if user data is available
+     const isUserAvailable = !!token && !!user;
+  
 
   const cartItems = useSelector((state) => state?.order?.cartItems);
   console.log('Cart Items:', cartItems);
@@ -49,51 +57,54 @@ const Products = () => {
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">Product Page</h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {allProducts.map((product) => (
-          <div key={product._id} className="shadow relative">
-            <div
-              style={{ backgroundImage: `url(${product.image})` }}
-              className="bg-cover bg-center bg-no-repeat h-96 m-10"
-            ></div>
-            <div className="p-4 bg-white">
-              <h3 className="text-xl font-bold mb-4">{product.name}</h3>
-              <p className="text-black mb-4">
+           <div key={product._id} className="shadow-sm p-4">
+              
+           <Link
+               to={`/products/${product._id}/reviews`}
+             >
+           <div className=' bg-lime-100'>
+             <img src={product.image} style={{backgroundSize:"cover", backgroundPosition:"center", width:"100%",}} className=' h-96 object-fill' alt="" />
+           </div>
 
-                {product.description.length > 50 ?
-                  product.description.substring(0, 50) + "..." :
-                  product.description
-                }
+         </Link>
+           <div className='flex justify-between align-middle py-4'>
+             <div>
+               <div className="font-semibold  text-sm">{product.name}</div>
+               <div className="text-gray-700 text-sm">Brand: {product.brand}</div>
+               <div className="text-gray-700 text-sm">Price: ${product.price}</div>
 
-              </p>
-              <p className="text-black mb-2">
-                <span className="font-bold">Brand:</span>
-
-                {product.brand}
-              </p>
-              <p className="text-black mb-2">
-                <span className="font-bold">Price:</span> ${product.price}
-              </p>
-              <button
-                onClick={() => openModal(product)}
-                className="bg-indigo-500 text-white px-4 py-2 rounded mt-4"
-              >
-                Add to Cart
-              </button>
+               <Link
+               to={`/products/${product._id}/reviews`}
+             >
+            <button className="btn btn-xs">Details</button>
+             </Link>
+             </div>
+             <div >
+             <CommonButton
+               onClick={() => openModal(product)}
+             >
+               Add to Cart
+             </CommonButton>
+            
+             
+           
+            {isUserAvailable && user.role ==="admin" && (
               <Link
-                to={`/products/${product._id}/reviews`}
-                className="text-indigo-500 hover:underline block mt-2"
-              >
-                View Reviews
-              </Link>
-              <Link
-                to={`/admin/update-products/${product._id}`}
-                className="text-indigo-500 hover:underline block mt-2"
-              >
-                Update by Admin
-              </Link>
-            </div>
-          </div>
+              to={`/admin/update-products/${product._id}`}
+              className="text-indigo-500 hover:underline block mt-2"
+            >
+             <CommonButton>
+             Update by Admin
+             </CommonButton>
+            </Link>)
+           }
+           
+           </div>
+           </div>
+          
+         </div>
         ))}
       </div>
 
