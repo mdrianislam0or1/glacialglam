@@ -3,6 +3,8 @@ import { useGetProductQuery } from "../features/product/productApi";
 import { useGetReviewQuery } from "../features/review/reviewApi"; // Import useGetReviewQuery hook
 import QuantityModal from "../components/Order/QuantityModal";
 import { useState } from "react";
+import Spinner from "../ui/Spinner";
+import Error from "../ui/Error";
 
 const ProductDetails = () => {
 
@@ -14,9 +16,18 @@ const ProductDetails = () => {
   const { data: productData, isLoading: productLoading, isError: productError } = useGetProductQuery(productId);
   const { data: reviewData, isLoading: reviewLoading, isError: reviewError } = useGetReviewQuery(productId); // Fetch reviews for the product
 
-  if (productLoading || reviewLoading) return <div>Loading...</div>;
-  if (productError) return <div>Error loading product details</div>;
-  if (reviewError) return <div>Error loading reviews</div>;
+  if (productLoading || reviewLoading) return 
+
+    <Spinner/>
+
+  ;
+  if (productError) return 
+  <>
+    <Error message="Failed to fetch product details" />
+  </>
+  if (reviewError) return <>
+  <Error message="Failed to fetch product review" />
+  </>;
 
   const productWithReview = productData?.data;
 

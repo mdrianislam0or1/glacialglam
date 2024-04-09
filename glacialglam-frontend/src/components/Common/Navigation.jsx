@@ -70,34 +70,35 @@ export default function Navigation() {
             }
           </ul>
         </div>
-        <Link to="/"className="btn btn-ghost text-xl">
-         Glacial Glam</Link>
-        
+        <Link to="/" className="btn btn-ghost text-xl">
+          <strong>Glacial Glam</strong>
+        </Link>
+
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
           <li><NavLink to="/">Home</NavLink></li>
           <li><NavLink to="/cart">Cart</NavLink></li>
-         {isUserAvailable && user.role ==="admin" && (
-           <li>
-           <details>
-             <summary>Admin</summary>
-             <ul className="p-2">
+          {isUserAvailable && user.role === "admin" && (
+            <li>
+              <details>
+                <summary>Admin</summary>
+                <ul className="p-2">
 
-               <li>
-                 <Link to="/admin/all-order">All Order</Link>
-               </li>
-               <li>
-                 <Link to="/admin/create-product">Create Product</Link>
-               </li>
-               <li>
-                 <Link to="/admin/delete-product">Delete Product</Link>
-               </li>
+                  <li>
+                    <Link to="/admin/all-order">All Order</Link>
+                  </li>
+                  <li>
+                    <Link to="/admin/create-product">Create Product</Link>
+                  </li>
+                  <li>
+                    <Link to="/admin/delete-product">Delete Product</Link>
+                  </li>
 
-             </ul>
-           </details>
-         </li>
-         )}
+                </ul>
+              </details>
+            </li>
+          )}
           <li>
             <details>
               <summary>Menu</summary>
@@ -138,8 +139,8 @@ export default function Navigation() {
       </div>
       <div className="navbar-end">
         <Link to="/all-products" className="btn">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" /> 
-         
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
+
           </svg>
           Search
         </Link>
@@ -154,10 +155,10 @@ export default function Navigation() {
             <div className="card-body">
               <span className="font-bold text-lg">
                 <Link to="/cart">
-                {cartItems.length}
+                  {cartItems.length}
                 </Link>
-                
-              
+
+
               </span>
               <span className="text-info">Subtotal: ${cartItems.reduce((total, item) => total + item.price * item.qty, 0).toFixed(2)}</span>
               <div className="card-actions">

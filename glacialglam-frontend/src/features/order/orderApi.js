@@ -23,6 +23,15 @@ export const orderApi = apiSlice.injectEndpoints({
       keepUnusedDataFor: 600,
       providesTags: ["Order"],
     }),
+    getMyProfile: builder.query({
+      query: () => `/auth/myProfile`,
+      headers: {
+        Authorization: `${JSON.parse(localStorage.getItem("auth"))?.token}`,
+        "Content-Type": "application/json",
+      },
+      keepUnusedDataFor: 600,
+      providesTags: ["Order"],
+    }),
     getOrderById: builder.query({
       query: (orderId) => `/orders/myOrder/${orderId}`, 
       invalidatesTags: ["Order"],
@@ -50,6 +59,7 @@ export const orderApi = apiSlice.injectEndpoints({
 export const {
   useAddOrderItemsMutation,
   useGetMyAllOrderQuery,
+  useGetMyProfileQuery,
   useGetOrderByIdQuery,
 
   //admin

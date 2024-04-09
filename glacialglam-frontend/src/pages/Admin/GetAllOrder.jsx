@@ -17,7 +17,7 @@ const GetAllOrder = () => {
       try {
         if (deleteOrder !== null) {
           const res = await axios.delete(
-            `http://localhost:5000/api/orders/admin/orders/${deleteOrder}`,
+            `https://glacialglam-backend.vercel.app/api/orders/admin/orders/${deleteOrder}`,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -43,7 +43,7 @@ const GetAllOrder = () => {
       try {
         if (orderIdToUpdate !== null && currentStatusToUpdate !== null) {
           const res = await axios.post(
-            `http://localhost:5000/api/orders/admin/orders/${orderIdToUpdate}/deliver`,
+            `https://glacialglam-backend.vercel.app/api/orders/admin/orders/${orderIdToUpdate}/deliver`,
             {
               isDelivered: !currentStatusToUpdate,
             },
@@ -99,11 +99,11 @@ const GetAllOrder = () => {
       )}
 
       {isSuccess && orders.length > 0 && (
-        <div>
+        <div className="grid  sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
           {orders.map((order) => (
             <div
               key={order._id}
-              className="bg-white p-4 rounded-lg shadow-lg mb-4"
+              className="bg-lime-100 p-4 rounded-lg shadow-lg mb-4"
             >
               <h3 className="text-xl font-bold mb-2">Order #{order._id}</h3>
               <div className="flex flex-col md:flex-row md:justify-between">
@@ -115,14 +115,14 @@ const GetAllOrder = () => {
                 </div>
                 <div className="text-gray-600 mt-4 md:mt-0">
                   <p>Total Price: ${order.totalPrice.toFixed(2)}</p>
-                  <p>Payment: {order.isPaid ? "Paid" : "Not Paid"}</p>
+                  <p className="badge badge-accent">Payment: {order.isPaid ? "Paid" : "Not Paid"}</p>
                   <div className="flex items-center">
                     <p className="mr-2">Delivery:</p>
                     <button
-                      className={`py-1 px-2 rounded ${
+                      className={`py-6 px-2 mx-2 rounded text-sm ${
                         order.isDelivered
-                          ? "bg-green-500 text-white"
-                          : "bg-red-500 text-white"
+                          ? "badge badge-warning  gap-2"
+                          : "badge badge-warning gap-2"
                       }`}
                       onClick={() =>
                         handleDeliveryToggleClick(order._id, order.isDelivered)
@@ -132,7 +132,7 @@ const GetAllOrder = () => {
                     </button>
                     <button
                       onClick={() => handleDeleteToggleClick(order._id)}
-                      className="py-1 px-2 rounded bg-red-500 text-white ml-2"
+                      className="py-6 px-2 mx-2 rounded text-sm badge badge-error gap-2"
                     >
                       Delete
                     </button>

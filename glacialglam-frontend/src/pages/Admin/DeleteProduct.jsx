@@ -12,7 +12,7 @@ const DeleteProduct = () => {
   const handleDelete = async (productId) => {
     try {
       const res = await axios.delete(
-        `http://localhost:5000/api/products/${productId}`,
+        `https://glacialglam-backend.vercel.app/api/products/${productId}`,
 
         {
           headers: {

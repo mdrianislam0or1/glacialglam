@@ -5,6 +5,8 @@ import About from "./About"
 const Home = () => {
   return (
     <div className="">
+      
+
       <div className=" h-screen bg-cover bg-center bg-no-repeat bg-fixed
       bg-gray-900 bg-opacity-50
       "
@@ -14,7 +16,7 @@ const Home = () => {
         flex flex-col justify-center items-center h-full 
         ">
           <div className="">
-            <h1 className="text-8xl font-extrabold text-white">Welcome to Glacial Glam</h1>
+            <h1 className=" sm:text-6xl md:text-8xl lg:text-8xl font-extrabold text-white">Welcome to Glacial Glam</h1>
             <p className="text-white">Embrace the cold in style with our collection of jackets and coats. From timeless trench coats to trendy puffer jackets, our outerwear options offer the perfect blend of warmth and fashion-forward design. Layer up with our cozy knitwear and scarves to complete your cold-weather look.</p>
           </div>
         </div>
@@ -22,7 +24,7 @@ const Home = () => {
 
 
       <div className=" container px-10 mx-auto py-10">
-        <div className=" grid grid-cols-3 ">
+        <div className=" grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 ">
           <div className=" text-start">
             <h1 className=" text-4xl ">NEW ARRIVALS</h1>
           </div>
@@ -43,7 +45,7 @@ const Home = () => {
 
       <div className=" container px-10 mx-auto py-20">
         <div className="  grid grid-cols-1 text-center">
-          <h1 className=" text-6xl uppercase">
+          <h1 className=" sm:text-2xl md:text-6xl lg:text-6xl uppercase">
             Success is not final, failure is not fatal: It is the courage to continue that counts.
           </h1>
           <p className="text-sm text-end">- Winston Churchill</p>

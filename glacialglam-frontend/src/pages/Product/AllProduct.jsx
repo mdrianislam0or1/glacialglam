@@ -6,6 +6,7 @@ import QuantityModal from '../../components/Order/QuantityModal';
 import CommonButton from '../../ui/Button';
 import { useSelector } from 'react-redux';
 import CommonInput from '../../ui/CommonInput';
+import Spinner from '../../ui/Spinner';
 
 const AllProduct = () => {
 
@@ -37,7 +38,7 @@ const AllProduct = () => {
     refetch();
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Spinner/>;
   if (error) return <div>Error: {error.message}</div>;
 
   const openModal = (product) => {

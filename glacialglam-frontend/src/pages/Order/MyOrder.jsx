@@ -47,7 +47,7 @@ const MyOrder = () => {
   const handleToken = async (token) => {
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/orders/payment/${orderId}`,
+        `https://glacialglam-backend.vercel.app/api/orders/payment/${orderId}`,
         {
           tokenId: token.id,
           amount: totalPrice,
@@ -119,7 +119,7 @@ const MyOrder = () => {
       </div>
 
       <div className="">
-        <div className=" grid grid-cols-3 gap-4 ">
+        <div className=" grid grid-cols-2 gap-4 ">
         <div className="mb-8">
           <h3 className="text-xl font-bold mb-2 bg-lime-300 p-2">Payment Details</h3>
           <p>Payment Method: {paymentMethod}</p>

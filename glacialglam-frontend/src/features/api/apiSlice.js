@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { userLoggedOut } from "../auth/authSlice";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:5000/api",
+  baseUrl: "https://glacialglam-backend.vercel.app/api",
   prepareHeaders: async (headers, { getState }) => {
     const accessToken = getState()?.auth?.token;
     if (accessToken) {
