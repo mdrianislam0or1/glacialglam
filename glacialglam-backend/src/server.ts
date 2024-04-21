@@ -2,8 +2,6 @@ import app from './app';
 import mongoose from 'mongoose';
 import config from './app/config';
 
-// getting-started.js
-
 async function server() {
   try {
     await mongoose.connect(config.database_url as string);
@@ -17,6 +15,3 @@ async function server() {
 }
 
 server().catch((err) => console.log(err));
-
-
-
